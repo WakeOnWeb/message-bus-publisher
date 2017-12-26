@@ -1,0 +1,34 @@
+{
+    "name": "wakeonweb/event-bus-publisher",
+    "type": "library",
+    "description": "WakeOnWeb EventBus publisher",
+    "keywords": [
+        "event-bus"
+    ],
+    "homepage": "https://bitbucket.org/wakeonweb/event-bus-publisher",
+    "license": "private",
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.0",
+        "bernard/bernard": "^1.0",
+        "prooph/service-bus": "^6.0"
+    },
+    "suggest": {
+        "guzzlehttp/guzzle": "Communicate threw HTTP gateway."
+    },
+    "autoload": {
+        "psr-4": {
+            "WakeOnWeb\\EventBusPublisher\\": "src"
+        }
+    },
+    "autoload-dev":{
+        "psr-4":{
+            "Tests\\WakeOnWeb\\SalesforceClient\\":"tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    }
+}
