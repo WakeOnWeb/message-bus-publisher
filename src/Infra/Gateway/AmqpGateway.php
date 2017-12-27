@@ -22,7 +22,7 @@ class AmqpGateway implements GatewayInterface
 
     public function send($message): GatewayResponse
     {
-        $bernardMessage = new PlainMessage(self::MESSAGE_NAME, ['event' => $message]);
+        $bernardMessage = new PlainMessage(self::MESSAGE_NAME, ['message' => $message]);
 
         $this->bernardProducer->produce($bernardMessage, $this->queueName);
 
