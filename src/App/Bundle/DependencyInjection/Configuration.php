@@ -45,6 +45,7 @@ final class Configuration implements ConfigurationInterface
         return (new ArrayNodeDefinition('in_memory'))
             ->children()
                 ->arrayNode('targets')
+                    ->useAttributeAsKey('target')
                     ->prototype('array')
                         ->validate()
                             ->ifTrue(function($v) {
@@ -76,6 +77,7 @@ final class Configuration implements ConfigurationInterface
                 ->end()
                 //@todo verify than target are well defined in routing.
                 ->arrayNode('routing')
+                    ->useAttributeAsKey('target')
                     ->prototype('array')
                         ->prototype('scalar')
                         ->end()
