@@ -70,6 +70,7 @@ final class WakeonwebEventBusPublisherExtension extends Extension
         }
 
         $targetRepository = new Definition(InMemoryTargetRepository::class, [$targetDefinitions]);
+        $targetRepository->setPublic(true);
 
         $container->setDefinition('wow.event_bus_publisher.in_memory_target_repository', $targetRepository);
         $container->setAlias('wow.event_bus_publisher.target_repository', 'wow.event_bus_publisher.in_memory_target_repository');
@@ -84,6 +85,7 @@ final class WakeonwebEventBusPublisherExtension extends Extension
                 $definition->addMethodCall('addRoute', [$event, $targetName]);
             }
         }
+        $definition->setPublic(true);
 
         $container->setDefinition('wow.event_bus_publisher.in_memory_router_repository', $definition);
         $container->setAlias('wow.event_bus_publisher.router_repository', 'wow.event_bus_publisher.in_memory_router_repository');

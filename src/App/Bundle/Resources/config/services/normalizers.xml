@@ -5,8 +5,8 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="wow.event_bus_publisher.normalizer.array" class="WakeOnWeb\EventBusPublisher\Infra\Normalizer\ArrayNormalizer" />
+        <service id="wow.event_bus_publisher.normalizer.array" class="WakeOnWeb\EventBusPublisher\Infra\Normalizer\ArrayNormalizer"  public="true"/>
 
-        <service id="wow.event_bus_publisher.normalizer.json" class="WakeOnWeb\EventBusPublisher\Infra\Normalizer\JsonNormalizer" />
+        <service id="wow.event_bus_publisher.normalizer.json" class="WakeOnWeb\EventBusPublisher\Infra\Normalizer\JsonNormalizer"  public="true"/>
     </services>
 </container>
