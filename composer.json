@@ -10,10 +10,10 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=7.0",
-        "bernard/bernard": "^1.0",
         "prooph/service-bus": "^6.0"
     },
     "suggest": {
+        "bernard/bernard": "Publish asynchronously &| publish in amqp queue.",
         "guzzlehttp/guzzle": "Communicate threw HTTP gateway."
     },
     "autoload": {

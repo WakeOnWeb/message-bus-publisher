@@ -10,6 +10,9 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 final class Configuration implements ConfigurationInterface
 {
+    const DELIVERY_MODE_ASYNC = 'asynchronous';
+    const DELIVERY_MODE_SYNC = 'synchronous';
+
     /**
      * {@inheritdoc}
      */
@@ -19,10 +22,21 @@ final class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('wakeonweb_event_bus_publisher')
             ->children()
                 ->arrayNode('publishing')
+                    ->validate()
+                        ->ifTrue(function($v) {
+                            return $v['delivery_mode'] === static::DELIVERY_MODE_SYNC && isset($v['queue_name']);
+                        })
+                        ->thenInvalid('Queue name has to be defined only if delivery_mode is asynchronous')
+                        ->ifTrue(function($v) {
+                            return $v['delivery_mode'] === static::DELIVERY_MODE_ASYNC && false === isset($v['queue_name']);
+                        })
+                        ->thenInvalid('Queue name has to be defined if delivery_mode is asynchronous')
+                    ->end()
                     ->isRequired()
                     ->children()
-                        ->scalarNode('queue_name')->isRequired()->end()
-                        ->arrayNode('prooph_buses')
+                        ->enumNode('delivery_mode')->isRequired()->values([static::DELIVERY_MODE_SYNC, static::DELIVERY_MODE_ASYNC])->defaultValue(static::DELIVERY_MODE_SYNC)->end()
+                        ->scalarNode('queue_name')->end()
+                        ->arrayNode('listened_prooph_buses')
                             ->isRequired()
                             ->prototype('scalar')
                             ->end()

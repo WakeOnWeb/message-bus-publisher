@@ -6,12 +6,14 @@ namespace WakeOnWeb\EventBusPublisher\App\Bundle\DependencyInjection;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use WakeOnWeb\EventBusPublisher\Domain\Target\Target;
 use WakeOnWeb\EventBusPublisher\Infra\Gateway\AmqpGateway;
 use WakeOnWeb\EventBusPublisher\Infra\Gateway\HttpGateway;
+use WakeOnWeb\EventBusPublisher\Infra\Publishing\Delivery;
+use WakeOnWeb\EventBusPublisher\Infra\Publishing\ProophEventBusPlugin;
 use WakeOnWeb\EventBusPublisher\Infra\Router\InMemoryEventRouter;
 use WakeOnWeb\EventBusPublisher\Infra\Target\InMemoryTargetRepository;
 
@@ -26,18 +28,31 @@ final class WakeonwebEventBusPublisherExtension extends Extension
 
         $this->createInMemoryDriverDefinitions($config['driver']['in_memory'], $container);
 
-        $container->setParameter('wow.event_bus_publisher.publishing.queue_name', $config['publishing']['queue_name']);
-
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config/services'));
-        $loader->load('bernard.xml');
+        $loader->load('delivery.xml');
         $loader->load('normalizers.xml');
-        $loader->load('prooph_plugin.xml');
 
-        foreach ($config['publishing']['prooph_buses'] as $bus) {
-            $container->getDefinition('wow.event_bus_publisher.prooph_plugin')
-                ->addTag(sprintf('prooph_service_bus.%s.plugin', $bus));
-            ;
+        if ($config['publishing']['delivery_mode'] === Configuration::DELIVERY_MODE_ASYNC) {
+            $loader->load('bernard.xml');
+
+            $publishingDelivery = new Definition(Delivery\BernardAsynchronous::class, [
+                new Reference('bernard.producer'),
+                $config['publishing']['queue_name']
+            ]);
+        } else {
+            $publishingDelivery = new Reference('wow.event_bus_publisher.publishing.delivery.synchronous');
         }
+
+        $proophPluginDefinition = new Definition(ProophEventBusPlugin::class, [
+            new Reference('wow.event_bus_publisher.router_repository'),
+            $publishingDelivery
+        ]);
+
+        foreach ($config['publishing']['listened_prooph_buses'] as $bus) {
+            $proophPluginDefinition->addTag(sprintf('prooph_service_bus.%s.plugin', $bus));
+        }
+
+        $container->setDefinition('wow.event_bus_publisher.prooph_plugin', $proophPluginDefinition);
     }
 
     private function createInMemoryDriverDefinitions(array $config, ContainerBuilder $container)

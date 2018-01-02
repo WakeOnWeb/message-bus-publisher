@@ -1,8 +1,6 @@
-WakeOnWeb EventBusPublisher
-===========================
+# WakeOnWeb EventBusPublisher
 
-Installation
-------------
+## Installation
 
 This repository is currently private, so you have to add it to your repositories:
 
@@ -25,15 +23,29 @@ This repository is currently private, so you have to add it to your repositories
 
 If you use **Symfony**, you can load the bundle `WakeOnWeb\EventBusPublisher\App\Bundle\WakeonwebEventBusPublisherBundle`.
 
-Usage
------
+## Usage
 
-Example using Symfony bundle:
+### Synchronous
 
 ```
 wakeonweb_event_bus_publisher:
     publishing:
-        prooph_buses: [sync_external_outgoing_event_bus]
+        listened_prooph_buses: [sync_external_outgoing_event_bus]
+        delivery_mode: synchronous
+    driver:
+        # ... see driver chapter
+```
+
+Define the prooph buses this publisher will listen to.
+Once an event is dispatched in theses buses, it'll dispatch events to targets.
+
+### Asynchronous
+
+```
+wakeonweb_event_bus_publisher:
+    publishing:
+        listened_prooph_buses: [sync_external_outgoing_event_bus]
+        delivery_mode: asynchronous
         queue_name: my_queue_name.{target}
     driver:
         # ... see driver chapter
@@ -50,20 +62,17 @@ Then consume theses messages to dispatch them to targets:
 ```
 
 
-Flow
------
+## Flow
 
 ![flow](docs/flow.png)
 
-Drivers implemented
--------------------
+## Drivers implemented
 
 - [Symfony configuration](docs/driver-symfony-configuration.md)
 - [InMemory] TBD
 - [DoctrineORM] @TODO
 
-Todo
------
+## Todo
 
 - This library should itself trigger message in rabbit before route events ?
 - Success strategy
