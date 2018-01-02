@@ -2,25 +2,34 @@
 
 namespace WakeOnWeb\EventBusPublisher\Infra\Publishing;
 
-use Bernard\Message\PlainMessage;
-use Bernard\Producer as BernardProducer;
 use Prooph\Common\Event\DefaultActionEvent;
 use Prooph\ServiceBus\MessageBus;
 use Prooph\ServiceBus\Plugin\AbstractPlugin;
+use WakeOnWeb\EventBusPublisher\Domain\Publishing\Delivery\DeliveryInterface;
 use WakeOnWeb\EventBusPublisher\Domain\Router\EventRouterInterface;
-use WakeOnWeb\EventBusPublisher\Infra\Queue\BernardReceiver;
 
+/**
+ * ProophEventBusPlugin
+ *
+ * @uses AbstractPlugin
+ * @author Stephane PY <s.py@wakeonweb.com>
+ */
 class ProophEventBusPlugin extends AbstractPlugin
 {
+    /** var EventRouterInterface */
     private $eventRouter;
-    private $bernardProducer;
-    private $queueName;
 
-    public function __construct(EventRouterInterface $eventRouter, BernardProducer $bernardProducer, string $queueName)
+    /** var DeliveryInterface */
+    private $delivery;
+
+    /**
+     * @param EventRouterInterface $eventRouter eventRouter
+     * @param DeliveryInterface $delivery delivery
+     */
+    public function __construct(EventRouterInterface $eventRouter, DeliveryInterface $delivery)
     {
         $this->eventRouter = $eventRouter;
-        $this->bernardProducer = $bernardProducer;
-        $this->queueName = $queueName;
+        $this->delivery = $delivery;
     }
 
     public function attachToMessageBus(MessageBus $messageBus): void
@@ -34,21 +43,11 @@ class ProophEventBusPlugin extends AbstractPlugin
 
     public function onRouteMessage(DefaultActionEvent $event)
     {
-        $message   = $event->getParam(MessageBus::EVENT_PARAM_MESSAGE);
+        $message = $event->getParam(MessageBus::EVENT_PARAM_MESSAGE);
         $targetIds = $this->eventRouter->route($message);
 
         foreach ($targetIds as $targetId) {
-            $bernardMessage = new PlainMessage(BernardReceiver::MESSAGE_NAME, [
-                'target' => $targetId,
-                'domain_event' => serialize($message),
-            ]);
-
-            $this->bernardProducer->produce($bernardMessage, $this->guessQueueName($targetId));
+            $this->delivery->deliver($message, $targetId);
         }
-    }
-
-    private function guessQueueName($targetName)
-    {
-        return str_replace(['{target}'], [$targetName], $this->queueName);
     }
 }
