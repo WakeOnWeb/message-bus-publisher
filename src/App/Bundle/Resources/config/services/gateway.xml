@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="wow.event_bus_publisher.gateway.factory.lazy" class="WakeOnWeb\EventBusPublisher\Infra\Gateway\LazyContainerGatewayFactory">
+            <argument type="service" id="service_container"/>
+        </service>
+
+        <service id="wow.event_bus_publisher.gateway.http" class="WakeOnWeb\EventBusPublisher\Infra\Gateway\HttpGateway" shared="false" public="true" />
+
+        <service id="wow.event_bus_publisher.gateway.amqp" class="WakeOnWeb\EventBusPublisher\Infra\Gateway\AmqpGateway" shared="false">
+            <argument type="service" id="bernard.producer" on-invalid="null" />
+        </service>
+
+    </services>
+</container>

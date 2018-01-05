@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WakeOnWeb\EventBusPublisher\App\Bundle\DependencyInjection;
@@ -10,12 +11,10 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use WakeOnWeb\EventBusPublisher\Domain\Target\Target;
-use WakeOnWeb\EventBusPublisher\Infra\Gateway\AmqpGateway;
-use WakeOnWeb\EventBusPublisher\Infra\Gateway\HttpGateway;
+use WakeOnWeb\EventBusPublisher\Domain\Gateway\Definition as GatewayDefinition;
 use WakeOnWeb\EventBusPublisher\Infra\Publishing\Delivery;
 use WakeOnWeb\EventBusPublisher\Infra\Publishing\ProophEventBusPlugin;
-use WakeOnWeb\EventBusPublisher\Infra\Router\InMemoryEventRouter;
-use WakeOnWeb\EventBusPublisher\Infra\Target\InMemoryTargetRepository;
+use WakeOnWeb\EventBusPublisher\Infra\Driver\InMemory;
 
 /**
  * Defines and load message bus instances.
@@ -26,26 +25,43 @@ final class WakeonwebEventBusPublisherExtension extends Extension
     {
         $config = $this->processConfiguration(new Configuration(), $configs);
 
-        $this->createInMemoryDriverDefinitions($config['driver']['in_memory'], $container);
-
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config/services'));
         $loader->load('delivery.xml');
+        $loader->load('gateway.xml');
         $loader->load('normalizers.xml');
+
+        $driver = current(array_keys($config['driver']));
+        $driverConfig = current($config['driver']);
+
+        switch ($driver) {
+            case 'doctrine_orm':
+                $container->setParameter('wow.event_bus_publisher.driver.doctrine_orm.route_entity_class', $driverConfig['route_entity']);
+                $container->setParameter('wow.event_bus_publisher.driver.doctrine_orm.target_entity_class', $driverConfig['target_entity']);
+                $container->setAlias('wow.event_bus_publisher.driver.doctrine_orm.entity_manager', sprintf('doctrine.orm.%s_entity_manager', $driverConfig['entity_manager']));
+                $loader->load('driver_doctrine_orm.xml');
+                break;
+            case 'in_memory':
+                $this->createInMemoryDriverDefinitions($config['driver']['in_memory'], $container);
+                break;
+            default:
+                throw new \LogicException("Unknown driver $driver");
+                break;
+        }
 
         if ($config['publishing']['delivery_mode'] === Configuration::DELIVERY_MODE_ASYNC) {
             $loader->load('bernard.xml');
 
             $publishingDelivery = new Definition(Delivery\BernardAsynchronous::class, [
                 new Reference('bernard.producer'),
-                $config['publishing']['queue_name']
+                $config['publishing']['queue_name'],
             ]);
         } else {
             $publishingDelivery = new Reference('wow.event_bus_publisher.publishing.delivery.synchronous');
         }
 
         $proophPluginDefinition = new Definition(ProophEventBusPlugin::class, [
-            new Reference('wow.event_bus_publisher.router_repository'),
-            $publishingDelivery
+            new Reference('wow.event_bus_publisher.event_router'),
+            $publishingDelivery,
         ]);
 
         foreach ($config['publishing']['listened_prooph_buses'] as $bus) {
@@ -66,25 +82,19 @@ final class WakeonwebEventBusPublisherExtension extends Extension
         $targetDefinitions = [];
         foreach ($config as $name => $targetConfig) {
             if (array_key_exists('service', $targetConfig)) {
-                $gatewayDefinition = new Reference($targetConfig['service']['id']);
+                $gatewayDefinition = new Definition(GatewayDefinition\ServiceGatewayDefinition::class, [$targetConfig['service']['id']]);
             } elseif (array_key_exists('http', $targetConfig)) {
-                $gatewayDefinition = new Definition(HttpGateway::class, [$targetConfig['http']['endpoint']]);
+                $gatewayDefinition = new Definition(GatewayDefinition\HttpGatewayDefinition::class, [$targetConfig['http']['endpoint']]);
             } elseif (array_key_exists('amqp', $targetConfig)) {
-                $gatewayDefinition = new Definition(AmqpGateway::class, [new Reference('bernard.producer'), $targetConfig['amqp']['queue']]);
+                $gatewayDefinition = new Definition(GatewayDefinition\AmqpGatewayDefinition::class, [$targetConfig['amqp']['queue']]);
             } else {
                 throw new \LogicException(sprintf('Cannot guess gateway of target “%s“', $name));
             }
 
-
-            $normalizerDefinition = null;
-            if (array_key_exists('normalizer', $targetConfig)) {
-                $normalizerDefinition = new Reference($targetConfig['normalizer']);
-            }
-
-            $targetDefinitions[] = new Definition(Target::class, [$name, $gatewayDefinition, $normalizerDefinition]);
+            $targetDefinitions[] = new Definition(Target::class, [$name, $gatewayDefinition, $targetConfig['normalizer']]);
         }
 
-        $targetRepository = new Definition(InMemoryTargetRepository::class, [$targetDefinitions]);
+        $targetRepository = new Definition(InMemory\TargetRepository::class, [$targetDefinitions]);
         $targetRepository->setPublic(true);
 
         $container->setDefinition('wow.event_bus_publisher.in_memory_target_repository', $targetRepository);
@@ -93,7 +103,7 @@ final class WakeonwebEventBusPublisherExtension extends Extension
 
     private function createInMemoryRouterDefinition(array $config, ContainerBuilder $container)
     {
-        $definition = new Definition(InMemoryEventRouter::class, [new Reference('wow.event_bus_publisher.target_repository')]);
+        $definition = new Definition(InMemory\EventRouter::class);
 
         foreach ($config as $targetName => $events) {
             foreach ($events as $event) {
@@ -102,7 +112,7 @@ final class WakeonwebEventBusPublisherExtension extends Extension
         }
         $definition->setPublic(true);
 
-        $container->setDefinition('wow.event_bus_publisher.in_memory_router_repository', $definition);
-        $container->setAlias('wow.event_bus_publisher.router_repository', 'wow.event_bus_publisher.in_memory_router_repository');
+        $container->setDefinition('wow.event_bus_publisher.in_memory_event_router', $definition);
+        $container->setAlias('wow.event_bus_publisher.event_router', 'wow.event_bus_publisher.in_memory_event_router');
     }
 }

@@ -3,7 +3,7 @@
 namespace WakeOnWeb\EventBusPublisher\Domain\Target;
 
 /**
- * TargetCollection
+ * TargetCollection.
  *
  * @author Stephane PY <s.py@wakeonweb.com>
  */

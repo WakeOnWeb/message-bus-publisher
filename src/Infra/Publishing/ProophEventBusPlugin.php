@@ -9,9 +9,10 @@ use WakeOnWeb\EventBusPublisher\Domain\Publishing\Delivery\DeliveryInterface;
 use WakeOnWeb\EventBusPublisher\Domain\Router\EventRouterInterface;
 
 /**
- * ProophEventBusPlugin
+ * ProophEventBusPlugin.
  *
- * @uses AbstractPlugin
+ * @uses \AbstractPlugin
+ *
  * @author Stephane PY <s.py@wakeonweb.com>
  */
 class ProophEventBusPlugin extends AbstractPlugin
@@ -24,7 +25,7 @@ class ProophEventBusPlugin extends AbstractPlugin
 
     /**
      * @param EventRouterInterface $eventRouter eventRouter
-     * @param DeliveryInterface $delivery delivery
+     * @param DeliveryInterface    $delivery    delivery
      */
     public function __construct(EventRouterInterface $eventRouter, DeliveryInterface $delivery)
     {

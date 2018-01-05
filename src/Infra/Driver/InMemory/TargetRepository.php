@@ -1,13 +1,12 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Infra\Target;
+namespace WakeOnWeb\EventBusPublisher\Infra\Driver\InMemory;
 
 use WakeOnWeb\EventBusPublisher\Domain\Exception\TargetNotFoundException;
 use WakeOnWeb\EventBusPublisher\Domain\Target\Target;
-use WakeOnWeb\EventBusPublisher\Domain\Target\TargetCollection;
 use WakeOnWeb\EventBusPublisher\Domain\Target\TargetRepositoryInterface;
 
-class InMemoryTargetRepository implements TargetRepositoryInterface
+class TargetRepository implements TargetRepositoryInterface
 {
     /** var array */
     private $targets;
@@ -25,24 +24,6 @@ class InMemoryTargetRepository implements TargetRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function findRequiredForIds(array $ids): TargetCollection
-    {
-        $coll = new TargetCollection();
-
-        if (count($ids) === 0) {
-            return $coll;
-        }
-
-        foreach ($ids as $id) {
-            $coll->add($this->findRequired($id));
-        }
-
-        return $coll;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function findRequired($id): Target
     {
         if (false === array_key_exists($id, $this->targets)) {
@@ -54,6 +35,6 @@ class InMemoryTargetRepository implements TargetRepositoryInterface
 
     private function addTarget(Target $target)
     {
-        $this->targets[$target->getName()] = $target;
+        $this->targets[$target->getId()] = $target;
     }
 }

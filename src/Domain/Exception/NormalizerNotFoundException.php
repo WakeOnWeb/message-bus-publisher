@@ -3,14 +3,14 @@
 namespace WakeOnWeb\EventBusPublisher\Domain\Exception;
 
 /**
- * TargetNotFoundException.
+ * NormalizerNotFoundException.
  *
  * @author Stephane PY <s.py@wakeonweb.com>
  */
-class TargetNotFoundException extends \Exception
+class NormalizerNotFoundException extends \Exception
 {
     public static function createFromId($id)
     {
-        return new static(sprintf('Target "%s" not found', $id));
+        return new static(sprintf('Normalizer "%s" not found', $id));
     }
 }

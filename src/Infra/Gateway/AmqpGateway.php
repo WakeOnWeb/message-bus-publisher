@@ -14,9 +14,13 @@ class AmqpGateway implements GatewayInterface
     private $bernardProducer;
     private $queueName;
 
-    public function __construct(BernardProducer $bernardProducer, $queueName)
+    public function __construct(BernardProducer $bernardProducer)
     {
         $this->bernardProducer = $bernardProducer;
+    }
+
+    public function configure(string $queueName)
+    {
         $this->queueName = $queueName;
     }
 

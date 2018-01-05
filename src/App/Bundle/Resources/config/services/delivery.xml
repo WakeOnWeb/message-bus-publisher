@@ -7,6 +7,8 @@
     <services>
         <service id="wow.event_bus_publisher.publishing.delivery.synchronous" class="WakeOnWeb\EventBusPublisher\Infra\Publishing\Delivery\Synchronous">
             <argument type="service" id="wow.event_bus_publisher.target_repository"/>
+            <argument type="service" id="wow.event_bus_publisher.normalizer_repository" />
+            <argument type="service" id="wow.event_bus_publisher.gateway.factory.lazy" />
         </service>
     </services>
 </container>

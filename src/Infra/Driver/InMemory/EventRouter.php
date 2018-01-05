@@ -1,42 +1,36 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Infra\Router;
+namespace WakeOnWeb\EventBusPublisher\Infra\Driver\InMemory;
 
 use WakeOnWeb\EventBusPublisher\Domain\Event\DefaultEventIdentifierResolver;
 use WakeOnWeb\EventBusPublisher\Domain\Event\EventIdentifierResolverInterface;
 use WakeOnWeb\EventBusPublisher\Domain\Router\EventRouterInterface;
-use WakeOnWeb\EventBusPublisher\Domain\Target\TargetCollection;
-use WakeOnWeb\EventBusPublisher\Domain\Target\TargetRepositoryInterface;
 
 /**
- * InMemoryEventRouter
+ * EventRouter.
  *
- * @uses EventRouterInterface
+ * @uses \EventRouterInterface
+ *
  * @author Stephane PY <s.py@wakeonweb.com>
  */
-class InMemoryEventRouter implements EventRouterInterface
+class EventRouter implements EventRouterInterface
 {
     /** var array */
     private $routes = [];
-
-    /** var TargetRepositoryInterface */
-    private $targetRepository;
 
     /** var EventIdentifierResolverInterface */
     private $eventIdentifierResolver;
 
     /**
-     * @param TargetRepositoryInterface $targetRepository targetRepository
      * @param EventIdentifierResolverInterface $eventIdentifierResolver eventIdentifierResolver
      */
-    public function __construct(TargetRepositoryInterface $targetRepository, EventIdentifierResolverInterface $eventIdentifierResolver = null)
+    public function __construct(EventIdentifierResolverInterface $eventIdentifierResolver = null)
     {
-        $this->targetRepository = $targetRepository;
         $this->eventIdentifierResolver = $eventIdentifierResolver ?: new DefaultEventIdentifierResolver();
     }
 
     /**
-     * @param string $event event
+     * @param string $event  event
      * @param string $target target
      */
     public function addRoute(string $event, string $target): void
@@ -45,7 +39,7 @@ class InMemoryEventRouter implements EventRouterInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function route($event): array
     {

@@ -3,7 +3,6 @@
 namespace WakeOnWeb\EventBusPublisher\Infra\Queue;
 
 use Bernard\Message\PlainMessage;
-use WakeOnWeb\EventBusPublisher\Domain\Target\TargetRepositoryInterface;
 use WakeOnWeb\EventBusPublisher\Domain\Publishing\Delivery\DeliveryInterface;
 
 class BernardReceiver

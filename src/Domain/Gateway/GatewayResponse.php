@@ -3,7 +3,7 @@
 namespace WakeOnWeb\EventBusPublisher\Domain\Gateway;
 
 /**
- * GatewayResponse
+ * GatewayResponse.
  *
  * @author Stephane PY <s.py@wakeonweb.com>
  */
@@ -14,7 +14,7 @@ final class GatewayResponse
 
     private function __construct(string $status, string $body = null)
     {
-        $this->status  = $status;
+        $this->status = $status;
         $this->body = $body;
     }
 

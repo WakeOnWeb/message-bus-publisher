@@ -3,7 +3,7 @@
 namespace WakeOnWeb\EventBusPublisher\Domain\Gateway;
 
 /**
- * GatewayInterface
+ * GatewayInterface.
  *
  * @author Stephane PY <s.py@wakeonweb.com>
  */

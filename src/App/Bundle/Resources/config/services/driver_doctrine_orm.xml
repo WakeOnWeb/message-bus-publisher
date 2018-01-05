@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="wow.event_bus_publisher.target_repository" class="WakeOnWeb\EventBusPublisher\Infra\Driver\DoctrineORM\TargetRepository" public="true">
+            <argument type="service" id="wow.event_bus_publisher.driver.doctrine_orm.entity_manager"/>
+            <argument>%wow.event_bus_publisher.driver.doctrine_orm.target_entity_class%</argument>
+        </service>
+
+        <service id="wow.event_bus_publisher.event_router" class="WakeOnWeb\EventBusPublisher\Infra\Driver\DoctrineORM\EventRouter" public="true">
+            <argument type="service" id="wow.event_bus_publisher.driver.doctrine_orm.entity_manager"/>
+            <argument>%wow.event_bus_publisher.driver.doctrine_orm.route_entity_class%</argument>
+        </service>
+    </services>
+</container>

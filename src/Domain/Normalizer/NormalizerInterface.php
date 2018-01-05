@@ -17,4 +17,9 @@ interface NormalizerInterface
      *  It'll depend on targets.
      */
     public function normalize(DomainEvent $event);
+
+    /**
+     *  Which alias to be configured.
+     */
+    public function getAlias(): string;
 }

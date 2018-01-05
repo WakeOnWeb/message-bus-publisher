@@ -2,8 +2,7 @@
 
 namespace WakeOnWeb\EventBusPublisher\Domain\Target;
 
-use WakeOnWeb\EventBusPublisher\Domain\Gateway\GatewayInterface;
-use WakeOnWeb\EventBusPublisher\Domain\Normalizer\NormalizerInterface;
+use WakeOnWeb\EventBusPublisher\Domain\Gateway\Definition\GatewayDefinitionInterface;
 
 /**
  * Target.
@@ -12,33 +11,33 @@ use WakeOnWeb\EventBusPublisher\Domain\Normalizer\NormalizerInterface;
  */
 class Target
 {
-    private $name;
-    private $gateway;
-    private $normalizer;
+    protected $id;
+    protected $gatewayDefinition;
+    protected $normalizer;
 
-    public function __construct(string $name, GatewayInterface $gateway, NormalizerInterface $normalizer = null)
+    public function __construct(string $id, GatewayDefinitionInterface $gatewayDefinition, string $normalizer = null)
     {
-        $this->name = $name;
-        $this->gateway = $gateway;
+        $this->id = $id;
+        $this->gatewayDefinition = $gatewayDefinition;
         $this->normalizer = $normalizer;
     }
 
-    public function getName(): string
+    public function getId(): string
     {
-        return $this->name;
+        return $this->id;
     }
 
-    public function getGateway(): GatewayInterface
+    public function getGatewayDefinition(): GatewayDefinitionInterface
     {
-        return $this->gateway;
+        return $this->gatewayDefinition;
     }
 
     public function hasNormalizer(): boolean
     {
-        return $this->normalizer !== null;
+        return null !== $this->normalizer;
     }
 
-    public function getNormalizer(): ?NormalizerInterface
+    public function getNormalizer(): ?string
     {
         return $this->normalizer;
     }

@@ -7,6 +7,7 @@ namespace WakeOnWeb\EventBusPublisher\App\Bundle\DependencyInjection;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use WakeOnWeb\EventBusPublisher\Infra\Driver\DoctrineORM\Entity;
 
 final class Configuration implements ConfigurationInterface
 {
@@ -23,11 +24,11 @@ final class Configuration implements ConfigurationInterface
             ->children()
                 ->arrayNode('publishing')
                     ->validate()
-                        ->ifTrue(function($v) {
+                        ->ifTrue(function ($v) {
                             return $v['delivery_mode'] === static::DELIVERY_MODE_SYNC && isset($v['queue_name']);
                         })
                         ->thenInvalid('Queue name has to be defined only if delivery_mode is asynchronous')
-                        ->ifTrue(function($v) {
+                        ->ifTrue(function ($v) {
                             return $v['delivery_mode'] === static::DELIVERY_MODE_ASYNC && false === isset($v['queue_name']);
                         })
                         ->thenInvalid('Queue name has to be defined if delivery_mode is asynchronous')
@@ -44,14 +45,32 @@ final class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->arrayNode('driver')
+                    ->validate()
+                        ->ifTrue(function ($v) {
+                            return 1 !== count(array_keys($v));
+                        })
+                        ->thenInvalid('wakeonweb_event_bus_publisher: You must define only one driver.')
+                    ->end()
                     ->children()
                         ->append($this->createInMemoryDriver())
+                        ->append($this->createDoctrineORMDriver())
                     ->end()
                 ->end()
             ->end()
             ;
 
         return $treeBuilder;
+    }
+
+    private function createDoctrineORMDriver()
+    {
+        return (new ArrayNodeDefinition('doctrine_orm'))
+                ->children()
+                    ->scalarNode('entity_manager')->defaultValue('default')->cannotBeEmpty()->end()
+                    ->scalarNode('target_entity')->defaultValue(Entity\Target::class)->cannotBeEmpty()->end()
+                    ->scalarNode('route_entity')->defaultValue(Entity\Route::class)->cannotBeEmpty()->end()
+                ->end()
+            ;
     }
 
     private function createInMemoryDriver()
@@ -62,10 +81,10 @@ final class Configuration implements ConfigurationInterface
                     ->useAttributeAsKey('target')
                     ->prototype('array')
                         ->validate()
-                            ->ifTrue(function($v) {
+                            ->ifTrue(function ($v) {
                                 $gateways = ['service', 'http', 'amqp'];
 
-                                return count(array_intersect(array_keys($v), $gateways)) !== 1;
+                                return 1 !== count(array_intersect(array_keys($v), $gateways));
                             })
                             ->thenInvalid('You must define 1 way to publish on targets, %s')
                         ->end()
@@ -98,6 +117,5 @@ final class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
             ->end();
-
     }
 }

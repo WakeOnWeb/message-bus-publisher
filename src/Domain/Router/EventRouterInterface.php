@@ -2,10 +2,8 @@
 
 namespace WakeOnWeb\EventBusPublisher\Domain\Router;
 
-use WakeOnWeb\EventBusPublisher\Domain\Target\TargetCollection;
-
 /**
- * EventRouterInterface
+ * EventRouterInterface.
  *
  * @author Stephane PY <s.py@wakeonweb.com>
  */

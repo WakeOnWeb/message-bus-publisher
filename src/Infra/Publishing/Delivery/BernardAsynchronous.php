@@ -18,7 +18,7 @@ class BernardAsynchronous implements DeliveryInterface
 
     /**
      * @param BernardProducer $bernardProducer bernardProducer
-     * @param string $queueName queueName
+     * @param string          $queueName       queueName
      */
     public function __construct(BernardProducer $bernardProducer, string $queueName)
     {
@@ -27,7 +27,7 @@ class BernardAsynchronous implements DeliveryInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function deliver(DomainEvent $event, string $targetId): void
     {

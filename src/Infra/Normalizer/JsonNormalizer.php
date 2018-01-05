@@ -6,10 +6,11 @@ use WakeOnWeb\EventBusPublisher\Domain\Normalizer\NormalizerInterface;
 use Prooph\Common\Messaging\DomainEvent;
 
 /**
- * JsonNormalizer
+ * JsonNormalizer.
  *
- * @uses AbstractNormalizer
- * @uses NormalizerInterface
+ * @uses \AbstractNormalizer
+ * @uses \NormalizerInterface
+ *
  * @author Stephane PY <s.py@wakeonweb.com>
  */
 class JsonNormalizer extends AbstractNormalizer implements NormalizerInterface
@@ -17,7 +18,7 @@ class JsonNormalizer extends AbstractNormalizer implements NormalizerInterface
     private $options;
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function __construct(integer $options = null)
     {
@@ -25,12 +26,20 @@ class JsonNormalizer extends AbstractNormalizer implements NormalizerInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function normalize(DomainEvent $event)
     {
         $event = $this->resetAsyncState($event);
 
         return json_encode($event->toArray(), $this->options);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAlias(): string
+    {
+        return 'json';
     }
 }

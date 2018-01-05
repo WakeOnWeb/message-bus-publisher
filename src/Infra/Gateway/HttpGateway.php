@@ -10,13 +10,17 @@ use WakeOnWeb\EventBusPublisher\Domain\Gateway\GatewayResponse;
 
 class HttpGateway implements GatewayInterface
 {
-    private $endpoint;
     private $httpClient;
+    private $endpoint;
 
-    public function __construct(string $endpoint, HttpClient $httpClient = null)
+    public function __construct(HttpClient $httpClient = null)
+    {
+        $this->httpClient = $httpClient ?: new HttpClient();
+    }
+
+    public function configure(string $endpoint)
     {
         $this->endpoint = $endpoint;
-        $this->httpClient = $httpClient ?: new HttpClient();
     }
 
     public function send($message): GatewayResponse

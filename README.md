@@ -69,11 +69,8 @@ Then consume theses messages to dispatch them to targets:
 ## Drivers implemented
 
 - [Symfony configuration](docs/driver-symfony-configuration.md)
-- [InMemory] TBD
-- [DoctrineORM] @TODO
+- [DoctrineORM](docs/driver-doctrine-orm.md)
 
-## Todo
+## Other documentation
 
-- This library should itself trigger message in rabbit before route events ?
-- Success strategy
-- Failure strategy
+- [How to add a normalizer](docs/add-normalizer.md)

@@ -1,5 +1,5 @@
 Driver Symfony Configuration
-===============
+============================
 
 ```
 wakeonweb_event_bus_publisher:
@@ -12,12 +12,12 @@ wakeonweb_event_bus_publisher:
                 y:
                     http:
                         endpoint: https://.....
-                    normalizer: App\Acme\NormalizerX
+                    normalizer: json
                 z:
                     amqp:
                         connection: xxx # PhpAmqpLib\Connection\AMQPStreamConnection
                         queue: xxx
-                    normalizer: App\Acme\NormalizerY
+                    normalizer: array
             routing:
                 x:
                     - App\Event\UserCreatedEvent
@@ -25,3 +25,5 @@ wakeonweb_event_bus_publisher:
                     - App\Event\UserCreatedEvent
 ```
 
+
+[Back to home](../README.md)

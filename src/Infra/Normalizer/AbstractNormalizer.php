@@ -2,7 +2,6 @@
 
 namespace WakeOnWeb\EventBusPublisher\Infra\Normalizer;
 
-use WakeOnWeb\EventBusPublisher\Domain\Normalizer\NormalizerInterface;
 use Prooph\Common\Messaging\DomainEvent;
 
 abstract class AbstractNormalizer
