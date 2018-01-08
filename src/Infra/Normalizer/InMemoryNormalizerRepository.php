@@ -12,28 +12,20 @@ class InMemoryNormalizerRepository implements NormalizerRepositoryInterface
     private $normalizers = [];
 
     /**
-     * @param \IteratorAggregate $normalizers normalizers
-     */
-    public function __construct(\IteratorAggregate $normalizers)
-    {
-        foreach ($normalizers as $normalizer) {
-            $this->addNormalizer($normalizer);
-        }
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function find(string $normalizer): NormalizerInterface
-    {
-        if (false === array_key_exists($normalizer, $this->normalizers)) {
+    { if (false === array_key_exists($normalizer, $this->normalizers)) {
             throw NormalizerNotFoundException::createFromId($normalizer);
         }
 
         return $this->normalizers[$normalizer];
     }
 
-    private function addNormalizer(NormalizerInterface $normalizer)
+    /**
+     * {@inheritdoc}
+     */
+    public function addNormalizer(NormalizerInterface $normalizer)
     {
         $this->normalizers[$normalizer->getAlias()] = $normalizer;
     }

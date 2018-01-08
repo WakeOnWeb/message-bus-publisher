@@ -5,15 +5,13 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="wow.event_bus_publisher.normalizer_repository" class="WakeOnWeb\EventBusPublisher\Infra\Normalizer\InMemoryNormalizerRepository"  public="false">
-            <argument type="tagged" tag="wow.event_bus_publisher.normalizer" />
-        </service>
+        <service id="wow.event_bus_publisher.normalizer_repository" class="WakeOnWeb\EventBusPublisher\Infra\Normalizer\InMemoryNormalizerRepository"  public="false" /> 
 
-        <service id="wow.event_bus_publisher.normalizer.array" class="WakeOnWeb\EventBusPublisher\Infra\Normalizer\ArrayNormalizer"  public="true">
+        <service id="wow.event_bus_publisher.normalizer.array" class="WakeOnWeb\EventBusPublisher\Infra\Normalizer\ArrayNormalizer" public="true">
             <tag name="wow.event_bus_publisher.normalizer" />
         </service>
 
-        <service id="wow.event_bus_publisher.normalizer.json" class="WakeOnWeb\EventBusPublisher\Infra\Normalizer\JsonNormalizer"  public="true">
+        <service id="wow.event_bus_publisher.normalizer.json" class="WakeOnWeb\EventBusPublisher\Infra\Normalizer\JsonNormalizer" public="true">
             <tag name="wow.event_bus_publisher.normalizer" />
         </service>
     </services>

@@ -10,4 +10,5 @@ namespace WakeOnWeb\EventBusPublisher\Domain\Normalizer;
 interface NormalizerRepositoryInterface
 {
     public function find(string $normalizer): ?NormalizerInterface;
+    public function addNormalizer(NormalizerInterface $normalizer);
 }

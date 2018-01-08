@@ -3,6 +3,8 @@
 namespace WakeOnWeb\EventBusPublisher\App\Bundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use WakeOnWeb\EventBusPublisher\App\Bundle\DependencyInjection\Compiler\NormalizersPass;
 
 /**
  * WakeonwebEventBusPublisher.
@@ -13,4 +15,8 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class WakeonwebEventBusPublisherBundle extends Bundle
 {
+    public function build(ContainerBuilder $container)
+    {
+        $container->addCompilerPass(new NormalizersPass());
+    }
 }
