@@ -6,7 +6,7 @@
 
 ```
     "require": [
-        "wakeonweb/event-bus-publisher": "^1.0@dev"
+        "wakeonweb/event-bus-publisher": "^0.1"
     ],
 ```
 
