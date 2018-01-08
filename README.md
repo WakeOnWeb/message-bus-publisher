@@ -2,23 +2,12 @@
 
 ## Installation
 
-This repository is currently private, so you have to add it to your repositories:
-
 `composer.json`
 
 ```
-    "repositories": [
-        {
-            "type": "vcs",
-            "url":  "git@bitbucket.org:wakeonweb/event-bus-publisher.git"
-        }
+    "require": [
+        "wakeonweb/event-bus-publisher": "^1.0@dev"
     ],
-```
-
-`composer.json`
-
-```
-    "wakeonweb/event-bus-publisher": "^1.0@dev"
 ```
 
 If you use **Symfony**, you can load the bundle `WakeOnWeb\EventBusPublisher\App\Bundle\WakeonwebEventBusPublisherBundle`.
