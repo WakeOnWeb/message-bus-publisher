@@ -11,7 +11,7 @@
 
         <service id="wow.event_bus_publisher.gateway.http" class="WakeOnWeb\EventBusPublisher\Infra\Gateway\HttpGateway" shared="false" public="true" />
 
-        <service id="wow.event_bus_publisher.gateway.amqp" class="WakeOnWeb\EventBusPublisher\Infra\Gateway\AmqpGateway" shared="false">
+        <service id="wow.event_bus_publisher.gateway.amqp" class="WakeOnWeb\EventBusPublisher\Infra\Gateway\AmqpGateway" shared="false" public="true">
             <argument type="service" id="bernard.producer" on-invalid="null" />
         </service>
 
