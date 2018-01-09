@@ -16,7 +16,7 @@ doctrine:
             event_bus_publisher:
                 is_bundle: false
                 type: xml
-                dir: '%kernel.project_dir%/vendor/wakeonweb/event-bus-publisher/src/Infra/Driver/DoctrineORM/Resources'
+                dir: '%kernel.project_dir%/vendor/wakeonweb/event-bus-publisher/src/Infra/Driver/DoctrineORM/Resources/entity'
                 prefix: 'WakeOnWeb\EventBusPublisher\Infra\Driver\DoctrineORM\Entity'
                 alias: App
 
@@ -36,7 +36,7 @@ wakeonweb_event_bus_publisher:
 wakeonweb_event_bus_publisher:
     driver:
         doctrine_orm:
-            entity_manager: defaul
+            entity_manager: your_own
             target_entity: Your\Own\Entity\Target
             route_entity: Your\Own\Entity\Route
 ```

@@ -6,15 +6,19 @@ namespace WakeOnWeb\EventBusPublisher\App\Bundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use WakeOnWeb\EventBusPublisher\Domain\Target\Target;
+use WakeOnWeb\EventBusPublisher\Domain\Audit\AuditorAggregator;
 use WakeOnWeb\EventBusPublisher\Domain\Gateway\Definition as GatewayDefinition;
+use WakeOnWeb\EventBusPublisher\Domain\Target\Target;
+use WakeOnWeb\EventBusPublisher\Infra\Driver\InMemory;
 use WakeOnWeb\EventBusPublisher\Infra\Publishing\Delivery;
 use WakeOnWeb\EventBusPublisher\Infra\Publishing\ProophEventBusPlugin;
-use WakeOnWeb\EventBusPublisher\Infra\Driver\InMemory;
+use WakeOnWeb\EventBusPublisher\Infra\Audit\PsrLoggerAuditor;
+use WakeOnWeb\EventBusPublisher\Infra\Driver\DoctrineORM\Audit\Auditor as DoctrineORMAuditor;
 
 /**
  * Defines and load message bus instances.
@@ -62,6 +66,7 @@ final class WakeonwebEventBusPublisherExtension extends Extension
         $proophPluginDefinition = new Definition(ProophEventBusPlugin::class, [
             new Reference('wow.event_bus_publisher.event_router'),
             $publishingDelivery,
+            new Reference('wow.event_bus_publisher.auditor', ContainerInterface::NULL_ON_INVALID_REFERENCE),
         ]);
 
         foreach ($config['publishing']['listened_prooph_buses'] as $bus) {
@@ -69,6 +74,10 @@ final class WakeonwebEventBusPublisherExtension extends Extension
         }
 
         $container->setDefinition('wow.event_bus_publisher.prooph_plugin', $proophPluginDefinition);
+
+        if (array_key_exists('audit', $config)) {
+            $this->createAuditDefinition($config['audit'], $container);
+        }
     }
 
     private function createInMemoryDriverDefinitions(array $config, ContainerBuilder $container)
@@ -114,5 +123,38 @@ final class WakeonwebEventBusPublisherExtension extends Extension
 
         $container->setDefinition('wow.event_bus_publisher.in_memory_event_router', $definition);
         $container->setAlias('wow.event_bus_publisher.event_router', 'wow.event_bus_publisher.in_memory_event_router');
+    }
+
+    private function createAuditDefinition(array $config, ContainerBuilder $container)
+    {
+        $auditors = [];
+
+        foreach ($config['drivers'] as $driver => $driverConfig) {
+            switch ($driver) {
+                case 'monolog':
+                    $loggerDefinition = new Definition(PsrLoggerAuditor::class, [new Reference('logger'), $driverConfig['only_routed_events'], $driverConfig['level']]);
+                    $loggerDefinition->addTag('monolog.logger', ['channel' => 'wow.event_bus_publisher.audit']);
+
+                    $container->setDefinition('wow.event_bus_publisher.auditor.monolog', $loggerDefinition);
+
+                    $auditors[] = new Reference('wow.event_bus_publisher.auditor.monolog');
+                    break;
+                case 'doctrine_orm':
+                    $auditors[] = new Definition(DoctrineORMAuditor::class, [
+                        new Reference(sprintf('doctrine.orm.%s_entity_manager', $driverConfig['entity_manager'])),
+                        $driverConfig['listened_event_entity'],
+                        $driverConfig['targeted_event_entity'],
+                        $driverConfig['only_routed_events'],
+                    ]);
+                    break;
+                case 'services':
+                    foreach ($driverConfig as $service) {
+                        $auditors[] = new Reference($service);
+                    }
+                    break;
+            }
+        }
+
+        $container->setDefinition('wow.event_bus_publisher.auditor', new Definition(AuditorAggregator::class, [$auditors]));
     }
 }

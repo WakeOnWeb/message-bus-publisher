@@ -50,6 +50,30 @@ Then consume theses messages to dispatch them to targets:
 ./bin/console bernard:consume my_queue_name.target_x
 ```
 
+## Audit
+
+This library can audit listened events and targeted events:
+
+```yaml
+wakeonweb_event_bus_publisher:
+    audit:
+        drivers:
+            monolog:
+                level: notice
+                only_routed_events: true # do you want to log each events ?
+            doctrine_orm: ~
+            services:
+                - x
+                - y
+```
+
+You can have as many drivers as you want.
+
+To go further in configuration, look at documentation below.
+
+- [Monolog](docs/audit-logger.md)
+- [DoctrineORM](docs/audit-doctrine-orm.md)
+- [Service](docs/audit-service.md)
 
 ## Flow
 

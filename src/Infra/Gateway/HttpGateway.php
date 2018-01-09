@@ -32,7 +32,7 @@ class HttpGateway implements GatewayInterface
 
             return GatewayResponse::createSuccessfulResponse((string) $response->getBody());
         } catch (RequestException $e) {
-            return GatewayResponse::createFailureResponse((string) $e->getResponse()->getBody());
+            return GatewayResponse::createFailureResponse((string) $e->getResponse() ? $e->getResponse()->getBody() : null);
         }
     }
 
