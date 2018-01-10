@@ -1,8 +1,8 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Domain\Target;
+namespace WakeOnWeb\MessageBusPublisher\Domain\Target;
 
-use WakeOnWeb\EventBusPublisher\Domain\Gateway\Definition\GatewayDefinitionInterface;
+use WakeOnWeb\MessageBusPublisher\Domain\Gateway\Definition\GatewayDefinitionInterface;
 
 /**
  * Target.

@@ -1,10 +1,10 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Infra\Normalizer;
+namespace WakeOnWeb\MessageBusPublisher\Infra\Normalizer;
 
-use WakeOnWeb\EventBusPublisher\Domain\Normalizer\NormalizerRepositoryInterface;
-use WakeOnWeb\EventBusPublisher\Domain\Normalizer\NormalizerInterface;
-use WakeOnWeb\EventBusPublisher\Domain\Exception\NormalizerNotFoundException;
+use WakeOnWeb\MessageBusPublisher\Domain\Normalizer\NormalizerRepositoryInterface;
+use WakeOnWeb\MessageBusPublisher\Domain\Normalizer\NormalizerInterface;
+use WakeOnWeb\MessageBusPublisher\Domain\Exception\NormalizerNotFoundException;
 
 class InMemoryNormalizerRepository implements NormalizerRepositoryInterface
 {

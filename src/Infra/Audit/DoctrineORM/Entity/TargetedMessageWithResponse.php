@@ -1,15 +1,15 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Infra\Audit\DoctrineORM\Entity;
+namespace WakeOnWeb\MessageBusPublisher\Infra\Audit\DoctrineORM\Entity;
 
-use WakeOnWeb\EventBusPublisher\Domain\Gateway\GatewayResponse;
+use WakeOnWeb\MessageBusPublisher\Domain\Gateway\GatewayResponse;
 
 /**
- * TargetedEvent.
+ * TargetedMessage.
  *
  * @author Stephane PY <s.py@wakeonweb.com>
  */
-class TargetedEventWithResponse extends TargetedEvent implements ResponseAwareEventInterface
+class TargetedMessageWithResponse extends TargetedMessage implements ResponseAwareMessageInterface
 {
     protected $responseSucceed;
     protected $responseTime;

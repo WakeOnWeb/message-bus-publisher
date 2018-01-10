@@ -1,9 +1,9 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Domain\Audit;
+namespace WakeOnWeb\MessageBusPublisher\Domain\Audit;
 
-use WakeOnWeb\EventBusPublisher\Domain\Gateway\GatewayResponse;
-use Prooph\Common\Messaging\DomainEvent;
+use WakeOnWeb\MessageBusPublisher\Domain\Gateway\GatewayResponse;
+use Prooph\Common\Messaging\DomainMessage;
 
 class AuditorAggregator implements AuditorInterface
 {
@@ -16,17 +16,17 @@ class AuditorAggregator implements AuditorInterface
         }
     }
 
-    public function registerListenedEvent(DomainEvent $event, bool $routed)
+    public function registerListenedMessage(DomainMessage $message, bool $routed)
     {
         foreach ($this->auditors as $auditor) {
-            $auditor->registerListenedEvent($event, $routed);
+            $auditor->registerListenedMessage($message, $routed);
         }
     }
 
-    public function registerTargetedEvent(DomainEvent $event, string $targetId, GatewayResponse $gatewayResponse)
+    public function registerTargetedMessage(DomainMessage $message, string $targetId, GatewayResponse $gatewayResponse)
     {
         foreach ($this->auditors as $auditor) {
-            $auditor->registerTargetedEvent($event, $targetId, $gatewayResponse);
+            $auditor->registerTargetedMessage($message, $targetId, $gatewayResponse);
         }
     }
 

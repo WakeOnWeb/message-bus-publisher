@@ -1,10 +1,10 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Infra\Router\DoctrineORM\Entity;
+namespace WakeOnWeb\MessageBusPublisher\Infra\Router\DoctrineORM\Entity;
 
-use WakeOnWeb\EventBusPublisher\Domain\Gateway\Definition\GatewayDefinitionFactory;
-use WakeOnWeb\EventBusPublisher\Domain\Gateway\Definition\GatewayDefinitionInterface;
-use WakeOnWeb\EventBusPublisher\Domain\Target\Target as DomainTarget;
+use WakeOnWeb\MessageBusPublisher\Domain\Gateway\Definition\GatewayDefinitionFactory;
+use WakeOnWeb\MessageBusPublisher\Domain\Gateway\Definition\GatewayDefinitionInterface;
+use WakeOnWeb\MessageBusPublisher\Domain\Target\Target as DomainTarget;
 
 /**
  * Target.

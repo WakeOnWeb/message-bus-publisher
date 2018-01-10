@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WakeOnWeb\EventBusPublisher\App\Bundle\DependencyInjection;
+namespace WakeOnWeb\MessageBusPublisher\App\Bundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -11,15 +11,15 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use WakeOnWeb\EventBusPublisher\Domain\Audit\AuditorAggregator;
-use WakeOnWeb\EventBusPublisher\Domain\Gateway\Definition as GatewayDefinition;
-use WakeOnWeb\EventBusPublisher\Domain\Target\Target;
-use WakeOnWeb\EventBusPublisher\Infra;
+use WakeOnWeb\MessageBusPublisher\Domain\Audit\AuditorAggregator;
+use WakeOnWeb\MessageBusPublisher\Domain\Gateway\Definition as GatewayDefinition;
+use WakeOnWeb\MessageBusPublisher\Domain\Target\Target;
+use WakeOnWeb\MessageBusPublisher\Infra;
 
 /**
  * Defines and load message bus instances.
  */
-final class WakeonwebEventBusPublisherExtension extends Extension
+final class WakeonwebMessageBusPublisherExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -35,9 +35,9 @@ final class WakeonwebEventBusPublisherExtension extends Extension
 
         switch ($driver) {
             case 'doctrine_orm':
-                $container->setParameter('wow.event_bus_publisher.driver.doctrine_orm.route_entity_class', $driverConfig['route_entity']);
-                $container->setParameter('wow.event_bus_publisher.driver.doctrine_orm.target_entity_class', $driverConfig['target_entity']);
-                $container->setAlias('wow.event_bus_publisher.driver.doctrine_orm.entity_manager', sprintf('doctrine.orm.%s_entity_manager', $driverConfig['entity_manager']));
+                $container->setParameter('wow.message_bus_publisher.driver.doctrine_orm.route_entity_class', $driverConfig['route_entity']);
+                $container->setParameter('wow.message_bus_publisher.driver.doctrine_orm.target_entity_class', $driverConfig['target_entity']);
+                $container->setAlias('wow.message_bus_publisher.driver.doctrine_orm.entity_manager', sprintf('doctrine.orm.%s_entity_manager', $driverConfig['entity_manager']));
                 $loader->load('driver_doctrine_orm.xml');
                 break;
             case 'in_memory':
@@ -56,20 +56,20 @@ final class WakeonwebEventBusPublisherExtension extends Extension
                 $config['publishing']['queue_name'],
             ]);
         } else {
-            $publishingDelivery = new Reference('wow.event_bus_publisher.publishing.delivery.synchronous');
+            $publishingDelivery = new Reference('wow.message_bus_publisher.publishing.delivery.synchronous');
         }
 
-        $proophPluginDefinition = new Definition(Infra\Publishing\ProophEventBusPlugin::class, [
-            new Reference('wow.event_bus_publisher.event_router'),
+        $proophPluginDefinition = new Definition(Infra\Publishing\ProophMessageBusPlugin::class, [
+            new Reference('wow.message_bus_publisher.message_router'),
             $publishingDelivery,
-            new Reference('wow.event_bus_publisher.auditor', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+            new Reference('wow.message_bus_publisher.auditor', ContainerInterface::NULL_ON_INVALID_REFERENCE),
         ]);
 
         foreach ($config['publishing']['listened_prooph_buses'] as $bus) {
             $proophPluginDefinition->addTag(sprintf('prooph_service_bus.%s.plugin', $bus));
         }
 
-        $container->setDefinition('wow.event_bus_publisher.prooph_plugin', $proophPluginDefinition);
+        $container->setDefinition('wow.message_bus_publisher.prooph_plugin', $proophPluginDefinition);
 
         if (array_key_exists('audit', $config)) {
             $this->createAuditDefinition($config['audit'], $container);
@@ -102,23 +102,23 @@ final class WakeonwebEventBusPublisherExtension extends Extension
         $targetRepository = new Definition(Infra\Target\InMemory\TargetRepository::class, [$targetDefinitions]);
         $targetRepository->setPublic(true);
 
-        $container->setDefinition('wow.event_bus_publisher.in_memory_target_repository', $targetRepository);
-        $container->setAlias('wow.event_bus_publisher.target_repository', 'wow.event_bus_publisher.in_memory_target_repository');
+        $container->setDefinition('wow.message_bus_publisher.in_memory_target_repository', $targetRepository);
+        $container->setAlias('wow.message_bus_publisher.target_repository', 'wow.message_bus_publisher.in_memory_target_repository');
     }
 
     private function createInMemoryRouterDefinition(array $config, ContainerBuilder $container)
     {
-        $definition = new Definition(Infra\Router\InMemory\EventRouter::class);
+        $definition = new Definition(Infra\Router\InMemory\MessageRouter::class);
 
-        foreach ($config as $targetName => $events) {
-            foreach ($events as $event) {
-                $definition->addMethodCall('addRoute', [$event, $targetName]);
+        foreach ($config as $targetName => $messages) {
+            foreach ($messages as $message) {
+                $definition->addMethodCall('addRoute', [$message, $targetName]);
             }
         }
         $definition->setPublic(true);
 
-        $container->setDefinition('wow.event_bus_publisher.in_memory_event_router', $definition);
-        $container->setAlias('wow.event_bus_publisher.event_router', 'wow.event_bus_publisher.in_memory_event_router');
+        $container->setDefinition('wow.message_bus_publisher.in_memory_message_router', $definition);
+        $container->setAlias('wow.message_bus_publisher.message_router', 'wow.message_bus_publisher.in_memory_message_router');
     }
 
     private function createAuditDefinition(array $config, ContainerBuilder $container)
@@ -128,19 +128,19 @@ final class WakeonwebEventBusPublisherExtension extends Extension
         foreach ($config['drivers'] as $driver => $driverConfig) {
             switch ($driver) {
                 case 'monolog':
-                    $loggerDefinition = new Definition(Infra\Audit\PsrLogger\Auditor::class, [new Reference('logger'), $driverConfig['only_routed_events'], $driverConfig['level']]);
-                    $loggerDefinition->addTag('monolog.logger', ['channel' => 'wow.event_bus_publisher.audit']);
+                    $loggerDefinition = new Definition(Infra\Audit\PsrLogger\Auditor::class, [new Reference('logger'), $driverConfig['only_routed_messages'], $driverConfig['level']]);
+                    $loggerDefinition->addTag('monolog.logger', ['channel' => 'wow.message_bus_publisher.audit']);
 
-                    $container->setDefinition('wow.event_bus_publisher.auditor.monolog', $loggerDefinition);
+                    $container->setDefinition('wow.message_bus_publisher.auditor.monolog', $loggerDefinition);
 
-                    $auditors[] = new Reference('wow.event_bus_publisher.auditor.monolog');
+                    $auditors[] = new Reference('wow.message_bus_publisher.auditor.monolog');
                     break;
                 case 'doctrine_orm':
                     $auditors[] = new Definition(Infra\Audit\DoctrineORM\Auditor::class, [
                         new Reference(sprintf('doctrine.orm.%s_entity_manager', $driverConfig['entity_manager'])),
-                        $driverConfig['listened_event_entity'],
-                        $driverConfig['targeted_event_entity'],
-                        $driverConfig['only_routed_events'],
+                        $driverConfig['listened_message_entity'],
+                        $driverConfig['targeted_message_entity'],
+                        $driverConfig['only_routed_messages'],
                     ]);
                     break;
                 case 'services':
@@ -151,6 +151,6 @@ final class WakeonwebEventBusPublisherExtension extends Extension
             }
         }
 
-        $container->setDefinition('wow.event_bus_publisher.auditor', new Definition(AuditorAggregator::class, [$auditors]));
+        $container->setDefinition('wow.message_bus_publisher.auditor', new Definition(AuditorAggregator::class, [$auditors]));
     }
 }

@@ -1,12 +1,12 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Infra\Gateway;
+namespace WakeOnWeb\MessageBusPublisher\Infra\Gateway;
 
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
-use WakeOnWeb\EventBusPublisher\Domain\Gateway\GatewayInterface;
-use WakeOnWeb\EventBusPublisher\Domain\Gateway\GatewayResponse;
+use WakeOnWeb\MessageBusPublisher\Domain\Gateway\GatewayInterface;
+use WakeOnWeb\MessageBusPublisher\Domain\Gateway\GatewayResponse;
 
 class HttpGateway implements GatewayInterface
 {

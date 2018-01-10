@@ -5,11 +5,11 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="wow.event_bus_publisher.publishing.delivery.synchronous" class="WakeOnWeb\EventBusPublisher\Infra\Publishing\Delivery\Synchronous">
-            <argument type="service" id="wow.event_bus_publisher.target_repository"/>
-            <argument type="service" id="wow.event_bus_publisher.normalizer_repository" />
-            <argument type="service" id="wow.event_bus_publisher.gateway.factory.lazy" />
-            <argument type="service" id="wow.event_bus_publisher.auditor" on-invalid="null" />
+        <service id="wow.message_bus_publisher.publishing.delivery.synchronous" class="WakeOnWeb\MessageBusPublisher\Infra\Publishing\Delivery\Synchronous">
+            <argument type="service" id="wow.message_bus_publisher.target_repository"/>
+            <argument type="service" id="wow.message_bus_publisher.normalizer_repository" />
+            <argument type="service" id="wow.message_bus_publisher.gateway.factory.lazy" />
+            <argument type="service" id="wow.message_bus_publisher.auditor" on-invalid="null" />
         </service>
     </services>
 </container>

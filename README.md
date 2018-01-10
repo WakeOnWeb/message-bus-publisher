@@ -1,4 +1,4 @@
-# WakeOnWeb EventBusPublisher
+# WakeOnWeb MessageBusPublisher
 
 ## Installation
 
@@ -6,34 +6,34 @@
 
 ```
     "require": [
-        "wakeonweb/event-bus-publisher": "^0.1"
+        "wakeonweb/message-bus-publisher": "^0.1"
     ],
 ```
 
-If you use **Symfony**, you can load the bundle `WakeOnWeb\EventBusPublisher\App\Bundle\WakeonwebEventBusPublisherBundle`.
+If you use **Symfony**, you can load the bundle `WakeOnWeb\MessageBusPublisher\App\Bundle\WakeonwebMessageBusPublisherBundle`.
 
 ## Usage
 
 ### Synchronous
 
 ```
-wakeonweb_event_bus_publisher:
+wakeonweb_message_bus_publisher:
     publishing:
-        listened_prooph_buses: [sync_external_outgoing_event_bus]
+        listened_prooph_buses: [event_bus]
         delivery_mode: synchronous
     driver:
         # ... see driver chapter
 ```
 
 Define the prooph buses this publisher will listen to.
-Once an event is dispatched in theses buses, it'll dispatch events to targets.
+Once an message is dispatched in theses buses, it'll dispatch messages to targets.
 
 ### Asynchronous
 
 ```
-wakeonweb_event_bus_publisher:
+wakeonweb_message_bus_publisher:
     publishing:
-        listened_prooph_buses: [sync_external_outgoing_event_bus]
+        listened_prooph_buses: [event_bus]
         delivery_mode: asynchronous
         queue_name: my_queue_name.{target}
     driver:
@@ -41,7 +41,7 @@ wakeonweb_event_bus_publisher:
 ```
 
 Define the prooph buses this publisher will listen to.
-Once an event is dispatched in theses buses, it'll guess route then dispatch this event
+Once an message is dispatched in theses buses, it'll guess route then dispatch this message
 in a dedicated queue called `my_queue_name.{target}` where {target} is the target name.
 
 Then consume theses messages to dispatch them to targets:
@@ -52,15 +52,15 @@ Then consume theses messages to dispatch them to targets:
 
 ## Audit
 
-This library can audit listened events and targeted events:
+This library can audit listened messages and targeted messages:
 
 ```yaml
-wakeonweb_event_bus_publisher:
+wakeonweb_message_bus_publisher:
     audit:
         drivers:
             monolog:
                 level: notice
-                only_routed_events: true # do you want to log each events ?
+                only_routed_messages: true # do you want to log each messages ?
             doctrine_orm: ~
             services:
                 - x

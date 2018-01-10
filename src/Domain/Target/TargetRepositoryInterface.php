@@ -1,8 +1,8 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Domain\Target;
+namespace WakeOnWeb\MessageBusPublisher\Domain\Target;
 
-use WakeOnWeb\EventBusPublisher\Domain\Exception\TargetNotFoundException;
+use WakeOnWeb\MessageBusPublisher\Domain\Exception\TargetNotFoundException;
 
 /**
  * TargetRepositoryInterface.

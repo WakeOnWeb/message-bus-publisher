@@ -4,9 +4,9 @@
       xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                           http://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
 
-    <mapped-superclass name="WakeOnWeb\EventBusPublisher\Infra\Audit\DoctrineORM\Entity\ListenedEvent">
-        <field name="eventId" column="event_id" type="string" length="255" nullable="false" />
-        <field name="eventName" column="event_name" type="string" length="255" nullable="false" />
+    <mapped-superclass name="WakeOnWeb\MessageBusPublisher\Infra\Audit\DoctrineORM\Entity\ListenedMessage">
+        <field name="messageId" column="message_id" type="string" length="255" nullable="false" />
+        <field name="messageName" column="message_name" type="string" length="255" nullable="false" />
         <field name="message" column="message" type="text" nullable="false" />
         <field name="createdAt" column="created_at" type="datetime" nullable="false" />
     </mapped-superclass>

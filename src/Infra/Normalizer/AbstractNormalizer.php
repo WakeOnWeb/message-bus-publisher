@@ -1,21 +1,21 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Infra\Normalizer;
+namespace WakeOnWeb\MessageBusPublisher\Infra\Normalizer;
 
-use Prooph\Common\Messaging\DomainEvent;
+use Prooph\Common\Messaging\DomainMessage;
 
 abstract class AbstractNormalizer
 {
-    public function resetAsyncState(DomainEvent $event): DomainEvent
+    public function resetAsyncState(DomainMessage $message): DomainMessage
     {
-        $metadata = $event->metadata();
+        $metadata = $message->metadata();
 
         if (false === array_key_exists('handled-async', $metadata)) {
-            return $event;
+            return $message;
         }
 
         $metadata['handled-async'] = false;
 
-        return $event->withMetadata($metadata);
+        return $message->withMetadata($metadata);
     }
 }

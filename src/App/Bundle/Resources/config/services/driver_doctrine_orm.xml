@@ -5,14 +5,14 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="wow.event_bus_publisher.target_repository" class="WakeOnWeb\EventBusPublisher\Infra\Target\DoctrineORM\TargetRepository" public="true">
-            <argument type="service" id="wow.event_bus_publisher.driver.doctrine_orm.entity_manager"/>
-            <argument>%wow.event_bus_publisher.driver.doctrine_orm.target_entity_class%</argument>
+        <service id="wow.message_bus_publisher.target_repository" class="WakeOnWeb\MessageBusPublisher\Infra\Target\DoctrineORM\TargetRepository" public="true">
+            <argument type="service" id="wow.message_bus_publisher.driver.doctrine_orm.entity_manager"/>
+            <argument>%wow.message_bus_publisher.driver.doctrine_orm.target_entity_class%</argument>
         </service>
 
-        <service id="wow.event_bus_publisher.event_router" class="WakeOnWeb\EventBusPublisher\Infra\Router\DoctrineORM\EventRouter" public="true">
-            <argument type="service" id="wow.event_bus_publisher.driver.doctrine_orm.entity_manager"/>
-            <argument>%wow.event_bus_publisher.driver.doctrine_orm.route_entity_class%</argument>
+        <service id="wow.message_bus_publisher.message_router" class="WakeOnWeb\MessageBusPublisher\Infra\Router\DoctrineORM\MessageRouter" public="true">
+            <argument type="service" id="wow.message_bus_publisher.driver.doctrine_orm.entity_manager"/>
+            <argument>%wow.message_bus_publisher.driver.doctrine_orm.route_entity_class%</argument>
         </service>
     </services>
 </container>

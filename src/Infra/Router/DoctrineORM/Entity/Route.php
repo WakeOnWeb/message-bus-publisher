@@ -1,6 +1,6 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Infra\Router\DoctrineORM\Entity;
+namespace WakeOnWeb\MessageBusPublisher\Infra\Router\DoctrineORM\Entity;
 
 /**
  * Route.
@@ -13,14 +13,14 @@ class Route
     private $id;
 
     /** @var string */
-    private $eventName;
+    private $messageName;
 
     /** @var Target */
     private $target;
 
-    public function __construct(string $eventName, Target $target)
+    public function __construct(string $messageName, Target $target)
     {
-        $this->eventName = $eventName;
+        $this->messageName = $messageName;
         $this->target = $target;
     }
 
@@ -29,9 +29,9 @@ class Route
         return $this->id;
     }
 
-    public function getEventName(): string
+    public function getMessageName(): string
     {
-        return $this->eventName;
+        return $this->messageName;
     }
 
     public function getTarget(): Target

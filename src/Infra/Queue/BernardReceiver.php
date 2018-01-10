@@ -1,13 +1,13 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Infra\Queue;
+namespace WakeOnWeb\MessageBusPublisher\Infra\Queue;
 
 use Bernard\Message\PlainMessage;
-use WakeOnWeb\EventBusPublisher\Domain\Publishing\Delivery\DeliveryInterface;
+use WakeOnWeb\MessageBusPublisher\Domain\Publishing\Delivery\DeliveryInterface;
 
 class BernardReceiver
 {
-    const MESSAGE_NAME = 'DomainEvent';
+    const MESSAGE_NAME = 'DomainMessage';
 
     /** @var DeliveryInterface */
     private $delivery;
@@ -25,6 +25,6 @@ class BernardReceiver
      */
     public function __invoke(PlainMessage $message)
     {
-        return $this->delivery->deliver(unserialize($message->get('domain_event')), $message->get('target'));
+        return $this->delivery->deliver(unserialize($message->get('domain_message')), $message->get('target'));
     }
 }

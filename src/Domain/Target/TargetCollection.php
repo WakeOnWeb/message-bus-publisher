@@ -1,6 +1,6 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Domain\Target;
+namespace WakeOnWeb\MessageBusPublisher\Domain\Target;
 
 /**
  * TargetCollection.

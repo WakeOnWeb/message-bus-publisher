@@ -1,19 +1,19 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\App\Bundle;
+namespace WakeOnWeb\MessageBusPublisher\App\Bundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use WakeOnWeb\EventBusPublisher\App\Bundle\DependencyInjection\Compiler\NormalizersPass;
+use WakeOnWeb\MessageBusPublisher\App\Bundle\DependencyInjection\Compiler\NormalizersPass;
 
 /**
- * WakeonwebEventBusPublisher.
+ * WakeonwebMessageBusPublisher.
  *
  * @uses \Bundle
  *
  * @author Stephane PY <s.py@wakeonweb.com>
  */
-class WakeonwebEventBusPublisherBundle extends Bundle
+class WakeonwebMessageBusPublisherBundle extends Bundle
 {
     public function build(ContainerBuilder $container)
     {

@@ -5,13 +5,13 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="wow.event_bus_publisher.gateway.factory.lazy" class="WakeOnWeb\EventBusPublisher\Infra\Gateway\LazyContainerGatewayFactory">
+        <service id="wow.message_bus_publisher.gateway.factory.lazy" class="WakeOnWeb\MessageBusPublisher\Infra\Gateway\LazyContainerGatewayFactory">
             <argument type="service" id="service_container"/>
         </service>
 
-        <service id="wow.event_bus_publisher.gateway.http" class="WakeOnWeb\EventBusPublisher\Infra\Gateway\HttpGateway" shared="false" public="true" />
+        <service id="wow.message_bus_publisher.gateway.http" class="WakeOnWeb\MessageBusPublisher\Infra\Gateway\HttpGateway" shared="false" public="true" />
 
-        <service id="wow.event_bus_publisher.gateway.amqp" class="WakeOnWeb\EventBusPublisher\Infra\Gateway\AmqpGateway" shared="false" public="true">
+        <service id="wow.message_bus_publisher.gateway.amqp" class="WakeOnWeb\MessageBusPublisher\Infra\Gateway\AmqpGateway" shared="false" public="true">
             <argument type="service" id="bernard.producer" on-invalid="null" />
         </service>
 

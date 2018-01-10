@@ -1,8 +1,8 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Domain\Normalizer;
+namespace WakeOnWeb\MessageBusPublisher\Domain\Normalizer;
 
-use Prooph\Common\Messaging\DomainEvent;
+use Prooph\Common\Messaging\DomainMessage;
 
 /**
  * NormalizerInterface.
@@ -12,11 +12,11 @@ use Prooph\Common\Messaging\DomainEvent;
 interface NormalizerInterface
 {
     /**
-     *  Normalizer DomainEvent
+     *  Normalizer DomainMessage
      *  We can't ensure returned data is a string
      *  It'll depend on targets.
      */
-    public function normalize(DomainEvent $event);
+    public function normalize(DomainMessage $message);
 
     /**
      *  Which alias to be configured.

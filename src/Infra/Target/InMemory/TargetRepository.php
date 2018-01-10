@@ -1,10 +1,10 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Infra\Target\InMemory;
+namespace WakeOnWeb\MessageBusPublisher\Infra\Target\InMemory;
 
-use WakeOnWeb\EventBusPublisher\Domain\Exception\TargetNotFoundException;
-use WakeOnWeb\EventBusPublisher\Domain\Target\Target;
-use WakeOnWeb\EventBusPublisher\Domain\Target\TargetRepositoryInterface;
+use WakeOnWeb\MessageBusPublisher\Domain\Exception\TargetNotFoundException;
+use WakeOnWeb\MessageBusPublisher\Domain\Target\Target;
+use WakeOnWeb\MessageBusPublisher\Domain\Target\TargetRepositoryInterface;
 
 class TargetRepository implements TargetRepositoryInterface
 {

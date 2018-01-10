@@ -1,9 +1,9 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Infra\Normalizer;
+namespace WakeOnWeb\MessageBusPublisher\Infra\Normalizer;
 
-use WakeOnWeb\EventBusPublisher\Domain\Normalizer\NormalizerInterface;
-use Prooph\Common\Messaging\DomainEvent;
+use WakeOnWeb\MessageBusPublisher\Domain\Normalizer\NormalizerInterface;
+use Prooph\Common\Messaging\DomainMessage;
 
 /**
  * JsonNormalizer.
@@ -28,11 +28,11 @@ class JsonNormalizer extends AbstractNormalizer implements NormalizerInterface
     /**
      * {@inheritdoc}
      */
-    public function normalize(DomainEvent $event)
+    public function normalize(DomainMessage $message)
     {
-        $event = $this->resetAsyncState($event);
+        $message = $this->resetAsyncState($message);
 
-        return json_encode($event->toArray(), $this->options);
+        return json_encode($message->toArray(), $this->options);
     }
 
     /**
