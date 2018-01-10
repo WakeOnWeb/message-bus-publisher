@@ -1,6 +1,6 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Infra\Driver\InMemory;
+namespace WakeOnWeb\EventBusPublisher\Infra\Target\InMemory;
 
 use WakeOnWeb\EventBusPublisher\Domain\Exception\TargetNotFoundException;
 use WakeOnWeb\EventBusPublisher\Domain\Target\Target;

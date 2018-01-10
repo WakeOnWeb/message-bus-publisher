@@ -1,36 +1,33 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Infra\Driver\DoctrineORM\Entity;
+namespace WakeOnWeb\EventBusPublisher\Infra\Audit\DoctrineORM\Entity;
 
 use Prooph\Common\Messaging\DomainEvent;
 
 /**
- * TargetedEvent.
+ * ListenedEvent.
  *
  * @author Stephane PY <s.py@wakeonweb.com>
  */
-class TargetedEvent
+class ListenedEvent
 {
     protected $id;
-    protected $target;
     protected $eventId;
     protected $eventName;
     protected $message;
     protected $createdAt;
 
-    private function __construct(string $target, string $eventId, string $eventName, string $message)
+    private function __construct(string $eventId, string $eventName, string $message)
     {
-        $this->target = $target;
         $this->eventId = $eventId;
         $this->eventName = $eventName;
         $this->message = $message;
         $this->createdAt = new \DateTimeImmutable();
     }
 
-    public static function createFromDomainEvent(DomainEvent $event, string $target)
+    public static function createFromDomainEvent(DomainEvent $event)
     {
         return new static(
-            $target,
             (string) $event->uuid(),
             $event->messageName(),
             json_encode($event->toArray())
@@ -40,11 +37,6 @@ class TargetedEvent
     public function getId(): int
     {
         return $this->id;
-    }
-
-    public function getTarget(): string
-    {
-        return $this->target;
     }
 
     public function getEventId(): string

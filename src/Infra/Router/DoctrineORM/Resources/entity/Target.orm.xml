@@ -4,7 +4,7 @@
       xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                           http://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
 
-    <entity name="WakeOnWeb\EventBusPublisher\Infra\Driver\DoctrineORM\Entity\Target" table="event_bus_publisher_target">
+    <entity name="WakeOnWeb\EventBusPublisher\Infra\Router\DoctrineORM\Entity\Target" table="event_bus_publisher_target">
 
         <id name="id" type="string" length="255"  column="id" />
         <field name="gatewayDefinition" column="gateway" type="json" nullable="false" />

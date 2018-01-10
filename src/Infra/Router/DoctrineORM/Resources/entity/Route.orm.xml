@@ -4,10 +4,16 @@
       xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                           http://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
 
-    <mapped-superclass name="WakeOnWeb\EventBusPublisher\Infra\Driver\DoctrineORM\Entity\ListenedEvent">
-        <field name="eventId" column="event_id" type="string" length="255" nullable="false" />
+    <entity name="WakeOnWeb\EventBusPublisher\Infra\Router\DoctrineORM\Entity\Route" table="event_bus_publisher_route">
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
         <field name="eventName" column="event_name" type="string" length="255" nullable="false" />
-        <field name="message" column="message" type="text" nullable="false" />
-        <field name="createdAt" column="created_at" type="datetime" nullable="false" />
-    </mapped-superclass>
+
+        <many-to-one field="target" target-entity="WakeOnWeb\EventBusPublisher\Infra\Router\DoctrineORM\Entity\Target">
+            <join-column name="target_id" referenced-column-name="id" nullable="false" />
+        </many-to-one>
+    </entity>
 </doctrine-mapping>

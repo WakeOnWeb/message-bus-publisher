@@ -1,14 +1,14 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Infra\Audit;
+namespace WakeOnWeb\EventBusPublisher\Infra\Audit\PsrLogger;
 
-use Psr\Log\LoggerInterface;
+use Prooph\Common\Messaging\DomainEvent;
 use Psr\Log\LogLevel;
+use Psr\Log\LoggerInterface;
 use WakeOnWeb\EventBusPublisher\Domain\Audit\AuditorInterface;
 use WakeOnWeb\EventBusPublisher\Domain\Gateway\GatewayResponse;
-use Prooph\Common\Messaging\DomainEvent;
 
-class PsrLoggerAuditor implements AuditorInterface
+class Auditor implements AuditorInterface
 {
     /** @var LoggerInterface */
     private $logger;

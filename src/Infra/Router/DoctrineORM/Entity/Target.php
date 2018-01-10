@@ -1,6 +1,6 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Infra\Driver\DoctrineORM\Entity;
+namespace WakeOnWeb\EventBusPublisher\Infra\Router\DoctrineORM\Entity;
 
 use WakeOnWeb\EventBusPublisher\Domain\Gateway\Definition\GatewayDefinitionFactory;
 use WakeOnWeb\EventBusPublisher\Domain\Gateway\Definition\GatewayDefinitionInterface;

@@ -14,8 +14,8 @@ wakeonweb_event_bus_publisher:
             doctrine_orm:
                 only_routed_events: false
                 entity_manager: default
-                listened_event_entity: WakeOnWeb\EventBusPublisher\Infra\Driver\DoctrineORM\Entity\ListenedEvent
-                targeted_event_entity: WakeOnWeb\EventBusPublisher\Infra\Driver\DoctrineORM\Entity\TargetedEvent
+                listened_event_entity: WakeOnWeb\EventBusPublisher\Infra\Audit\DoctrineORM\Entity\ListenedEvent
+                targeted_event_entity: WakeOnWeb\EventBusPublisher\Infra\Audit\DoctrineORM\Entity\TargetedEventWithResponse
 ```
 
 Define the doctrine mapping:
@@ -27,11 +27,11 @@ doctrine:
         naming_strategy: doctrine.orm.naming_strategy.underscore
         auto_mapping: true
         mappings:
-            event_bus_publisher:
+            event_bus_publisher_audit:
                 is_bundle: false
                 type: xml
-                dir: '%kernel.project_dir%/vendor/wakeonweb/event-bus-publisher/src/Infra/Driver/DoctrineORM/Resources/entity'
-                prefix: 'WakeOnWeb\EventBusPublisher\Infra\Driver\DoctrineORM\Entity'
+                dir: '%kernel.project_dir%/vendor/wakeonweb/event-bus-publisher/src/Infra/Audit/DoctrineORM/Resources/entity'
+                prefix: 'WakeOnWeb\EventBusPublisher\Infra\Audit\DoctrineORM\Entity'
                 alias: App
 ```
 

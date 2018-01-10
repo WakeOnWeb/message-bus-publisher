@@ -4,13 +4,18 @@
       xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                           http://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
 
-    <entity name="WakeOnWeb\EventBusPublisher\Infra\Driver\DoctrineORM\Entity\ListenedEvent" table="event_bus_publisher_audit_listened_event">
+    <entity name="WakeOnWeb\EventBusPublisher\Infra\Audit\DoctrineORM\Entity\TargetedEventWithResponse" table="event_bus_publisher_audit_targeted_event">
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
+        <field name="target" column="target" type="string" length="255" nullable="false" />
         <field name="eventId" column="event_id" type="string" length="255" nullable="false" />
         <field name="eventName" column="event_name" type="string" length="255" nullable="false" />
         <field name="message" column="message" type="text" nullable="false" />
         <field name="createdAt" column="created_at" type="datetime" nullable="false" />
+
+        <field name="responseSucceed" column="response_succeed" type="boolean" nullable="false" />
+        <field name="responseTime" column="response_time" type="float" nullable="true" />
+        <field name="responseBody" column="response_body" type="text"  nullable="true" />
     </entity>
 </doctrine-mapping>

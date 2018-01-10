@@ -1,6 +1,6 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Infra\Driver\InMemory;
+namespace WakeOnWeb\EventBusPublisher\Infra\Router\InMemory;
 
 use WakeOnWeb\EventBusPublisher\Domain\Event\DefaultEventIdentifierResolver;
 use WakeOnWeb\EventBusPublisher\Domain\Event\EventIdentifierResolverInterface;

@@ -1,12 +1,12 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Infra\Driver\DoctrineORM\Audit;
+namespace WakeOnWeb\EventBusPublisher\Infra\Audit\DoctrineORM;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Prooph\Common\Messaging\DomainEvent;
 use WakeOnWeb\EventBusPublisher\Domain\Audit\AuditorInterface;
 use WakeOnWeb\EventBusPublisher\Domain\Gateway\GatewayResponse;
-use WakeOnWeb\EventBusPublisher\Infra\Driver\DoctrineORM\Entity\ResponseAwareEventInterface;
+use WakeOnWeb\EventBusPublisher\Infra\Audit\DoctrineORM\Entity\ResponseAwareEventInterface;
 
 class Auditor implements AuditorInterface
 {
