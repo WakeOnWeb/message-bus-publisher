@@ -3,10 +3,11 @@
 namespace WakeOnWeb\EventBusPublisher\Infra\Publishing\Delivery;
 
 use Prooph\Common\Messaging\DomainEvent;
+use WakeOnWeb\EventBusPublisher\Domain\Audit\AuditorInterface;
+use WakeOnWeb\EventBusPublisher\Domain\Gateway\GatewayFactoryInterface;
+use WakeOnWeb\EventBusPublisher\Domain\Normalizer\NormalizerRepositoryInterface;
 use WakeOnWeb\EventBusPublisher\Domain\Publishing\Delivery\DeliveryInterface;
 use WakeOnWeb\EventBusPublisher\Domain\Target\TargetRepositoryInterface;
-use WakeOnWeb\EventBusPublisher\Domain\Normalizer\NormalizerRepositoryInterface;
-use WakeOnWeb\EventBusPublisher\Domain\Gateway\GatewayFactoryInterface;
 
 class Synchronous implements DeliveryInterface
 {
@@ -19,14 +20,19 @@ class Synchronous implements DeliveryInterface
     /** @var GatewayFactoryInterface ; */
     private $gatewayFactory;
 
+    /** var AuditorInterface */
+    private $auditor;
+
     public function __construct(
         TargetRepositoryInterface $targetRepository,
         NormalizerRepositoryInterface $normalizerRepository,
-        GatewayFactoryInterface $gatewayFactory
+        GatewayFactoryInterface $gatewayFactory,
+        AuditorInterface $auditor = null
     ) {
         $this->targetRepository = $targetRepository;
         $this->normalizerRepository = $normalizerRepository;
         $this->gatewayFactory = $gatewayFactory;
+        $this->auditor = $auditor;
     }
 
     /**
@@ -39,8 +45,15 @@ class Synchronous implements DeliveryInterface
 
         $normalizedData = $normalizer ? $normalizer->normalize($event) : $event;
 
-        $this->gatewayFactory
+        $beginTimer = microtime(true);
+        $response = $this->gatewayFactory
             ->createFromDefinition($target->getGatewayDefinition())
             ->send($normalizedData);
+
+        $response = $response->withTime(microtime(true) - $beginTimer);
+
+        if ($this->auditor) {
+            $this->auditor->registerTargetedEvent($event, $targetId, $response);
+        }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Infra\Driver\DoctrineORM;
+namespace WakeOnWeb\EventBusPublisher\Infra\Router\DoctrineORM;
 
 use Doctrine\ORM\EntityManagerInterface;
 use WakeOnWeb\EventBusPublisher\Domain\Event\DefaultEventIdentifierResolver;

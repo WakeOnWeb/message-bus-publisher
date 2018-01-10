@@ -1,4 +1,4 @@
-# Add a normalizer
+# Driver doctrine ORM
 
 
 ## Default configuration
@@ -13,19 +13,20 @@ wakeonweb_event_bus_publisher:
 doctrine:
     orm:
         mappings:
-            event_bus_publisher:
+            event_bus_publisher_router:
                 is_bundle: false
                 type: xml
-                dir: '%kernel.project_dir%/vendor/wakeonweb/event-bus-publisher/src/Infra/Driver/DoctrineORM/Resources'
-                prefix: 'WakeOnWeb\EventBusPublisher\Infra\Driver\DoctrineORM\Entity'
+                dir: '%kernel.project_dir%/vendor/wakeonweb/event-bus-publisher/src/Infra/Router/DoctrineORM/Resources/entity'
+                prefix: 'WakeOnWeb\EventBusPublisher\Infra\Router\DoctrineORM\Entity'
                 alias: App
+
 
 wakeonweb_event_bus_publisher:
     driver:
         doctrine_orm:
             entity_manager: default
-            target_entity: WakeOnWeb\EventBusPublisher\Infra\Driver\DoctrineORM\Entity\Target
-            route_entity: WakeOnWeb\EventBusPublisher\Infra\Driver\DoctrineORM\Entity\Route
+            target_entity: WakeOnWeb\EventBusPublisher\Infra\Router\DoctrineORM\Entity\Target
+            route_entity: WakeOnWeb\EventBusPublisher\Infra\Router\DoctrineORM\Entity\Route
 
 # OR 
 ```
@@ -36,7 +37,7 @@ wakeonweb_event_bus_publisher:
 wakeonweb_event_bus_publisher:
     driver:
         doctrine_orm:
-            entity_manager: defaul
+            entity_manager: your_own
             target_entity: Your\Own\Entity\Target
             route_entity: Your\Own\Entity\Route
 ```

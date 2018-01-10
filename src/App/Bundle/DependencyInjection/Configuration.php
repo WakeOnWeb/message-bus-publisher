@@ -7,7 +7,8 @@ namespace WakeOnWeb\EventBusPublisher\App\Bundle\DependencyInjection;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
-use WakeOnWeb\EventBusPublisher\Infra\Driver\DoctrineORM\Entity;
+use WakeOnWeb\EventBusPublisher\Infra\Audit\DoctrineORM\Entity as AuditEntity;
+use WakeOnWeb\EventBusPublisher\Infra\Router\DoctrineORM\Entity as RouterEntity;
 
 final class Configuration implements ConfigurationInterface
 {
@@ -44,6 +45,35 @@ final class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->arrayNode('audit')
+                    ->validate()
+                        ->ifTrue(function ($v) { return empty($v); })
+                        ->thenInvalid('You must define at least one audit driver or avoid audit.')
+                    ->end()
+                    ->children()
+                        ->arrayNode('drivers')
+                            ->children()
+                                ->arrayNode('monolog')
+                                    ->children()
+                                        ->booleanNode('only_routed_events')->defaultFalse()->end()
+                                        ->scalarNode('level')->defaultValue('notice')->end()
+                                    ->end()
+                                ->end()
+                                ->arrayNode('doctrine_orm')
+                                    ->children()
+                                        ->booleanNode('only_routed_events')->defaultFalse()->end()
+                                        ->scalarNode('entity_manager')->defaultValue('default')->cannotBeEmpty()->end()
+                                        ->scalarNode('listened_event_entity')->defaultValue(AuditEntity\ListenedEvent::class)->cannotBeEmpty()->end()
+                                        ->scalarNode('targeted_event_entity')->defaultValue(AuditEntity\TargetedEventWithResponse::class)->cannotBeEmpty()->end()
+                                    ->end()
+                                ->end()
+                                ->arrayNode('services')
+                                    ->prototype('scalar')->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
                 ->arrayNode('driver')
                     ->validate()
                         ->ifTrue(function ($v) {
@@ -67,8 +97,8 @@ final class Configuration implements ConfigurationInterface
         return (new ArrayNodeDefinition('doctrine_orm'))
                 ->children()
                     ->scalarNode('entity_manager')->defaultValue('default')->cannotBeEmpty()->end()
-                    ->scalarNode('target_entity')->defaultValue(Entity\Target::class)->cannotBeEmpty()->end()
-                    ->scalarNode('route_entity')->defaultValue(Entity\Route::class)->cannotBeEmpty()->end()
+                    ->scalarNode('target_entity')->defaultValue(RouterEntity\Target::class)->cannotBeEmpty()->end()
+                    ->scalarNode('route_entity')->defaultValue(RouterEntity\Route::class)->cannotBeEmpty()->end()
                 ->end()
             ;
     }

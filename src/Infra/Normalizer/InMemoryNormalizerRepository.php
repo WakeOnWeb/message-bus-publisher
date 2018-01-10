@@ -15,7 +15,8 @@ class InMemoryNormalizerRepository implements NormalizerRepositoryInterface
      * {@inheritdoc}
      */
     public function find(string $normalizer): NormalizerInterface
-    { if (false === array_key_exists($normalizer, $this->normalizers)) {
+    {
+        if (false === array_key_exists($normalizer, $this->normalizers)) {
             throw NormalizerNotFoundException::createFromId($normalizer);
         }
 

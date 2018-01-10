@@ -1,11 +1,11 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Infra\Driver\DoctrineORM;
+namespace WakeOnWeb\EventBusPublisher\Infra\Target\DoctrineORM;
 
+use Doctrine\ORM\EntityManagerInterface;
 use WakeOnWeb\EventBusPublisher\Domain\Exception\TargetNotFoundException;
 use WakeOnWeb\EventBusPublisher\Domain\Target\Target;
 use WakeOnWeb\EventBusPublisher\Domain\Target\TargetRepositoryInterface;
-use Doctrine\ORM\EntityManagerInterface;
 
 class TargetRepository implements TargetRepositoryInterface
 {
