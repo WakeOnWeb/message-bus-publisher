@@ -15,8 +15,8 @@ wakeonweb_event_bus_publisher:
                     normalizer: json
                 z:
                     amqp:
-                        connection: xxx # PhpAmqpLib\Connection\AMQPStreamConnection
                         queue: xxx
+                        message_name: EventBusExternalMessage
                     normalizer: array
             routing:
                 x:

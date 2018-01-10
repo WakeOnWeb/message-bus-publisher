@@ -49,7 +49,7 @@ class LazyContainerGatewayFactory implements GatewayFactoryInterface
     private function createAmqpGatewayFromDefinition(Definition\AmqpGatewayDefinition $gatewayDefinition): GatewayInterface
     {
         $gateway = $this->container->get('wow.event_bus_publisher.gateway.amqp');
-        $gateway->configure($gatewayDefinition->getQueueName());
+        $gateway->configure($gatewayDefinition->getQueueName(), $gatewayDefinition->getMessageName());
 
         return $gateway;
     }

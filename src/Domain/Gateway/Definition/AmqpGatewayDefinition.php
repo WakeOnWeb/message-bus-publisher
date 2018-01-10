@@ -9,9 +9,13 @@ class AmqpGatewayDefinition implements GatewayDefinitionInterface
     /** @var string */
     private $queueName;
 
-    public function __construct(string $queueName)
+    /** @var string */
+    private $messageName;
+
+    public function __construct(string $queueName, string $messageName)
     {
         $this->queueName = $queueName;
+        $this->messageName = $messageName;
     }
 
     public function getQueueName(): string
@@ -19,9 +23,14 @@ class AmqpGatewayDefinition implements GatewayDefinitionInterface
         return $this->queueName;
     }
 
+    public function getMessageName(): string
+    {
+        return $this->messageName;
+    }
+
     public static function createFromArray(array $data): AmqpGatewayDefinition
     {
-        return new static($data['queue_name']);
+        return new static($data['queue_name'], $data['message_name']);
     }
 
     public function jsonSerialize()
@@ -29,6 +38,7 @@ class AmqpGatewayDefinition implements GatewayDefinitionInterface
         return [
             '_type' => static::TYPE,
             'queue_name' => $this->queueName,
+            'message_name' => $this->messageName,
         ];
     }
 }

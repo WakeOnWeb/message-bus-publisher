@@ -9,24 +9,24 @@ use Bernard\Message\PlainMessage;
 
 class AmqpGateway implements GatewayInterface
 {
-    const MESSAGE_NAME = 'EventBusExternalMessage';
-
     private $bernardProducer;
     private $queueName;
+    private $messageName;
 
     public function __construct(BernardProducer $bernardProducer)
     {
         $this->bernardProducer = $bernardProducer;
     }
 
-    public function configure(string $queueName)
+    public function configure(string $queueName, string $messageName)
     {
         $this->queueName = $queueName;
+        $this->messageName = $messageName;
     }
 
     public function send($message): GatewayResponse
     {
-        $bernardMessage = new PlainMessage(self::MESSAGE_NAME, ['message' => $message]);
+        $bernardMessage = new PlainMessage($this->messageName, ['message' => $message]);
 
         $this->bernardProducer->produce($bernardMessage, $this->queueName);
 

@@ -91,7 +91,7 @@ final class WakeonwebEventBusPublisherExtension extends Extension
             } elseif (array_key_exists('http', $targetConfig)) {
                 $gatewayDefinition = new Definition(GatewayDefinition\HttpGatewayDefinition::class, [$targetConfig['http']['endpoint']]);
             } elseif (array_key_exists('amqp', $targetConfig)) {
-                $gatewayDefinition = new Definition(GatewayDefinition\AmqpGatewayDefinition::class, [$targetConfig['amqp']['queue']]);
+                $gatewayDefinition = new Definition(GatewayDefinition\AmqpGatewayDefinition::class, [$targetConfig['amqp']['queue'], $targetConfig['amqp']['message_name']]);
             } else {
                 throw new \LogicException(sprintf('Cannot guess gateway of target “%s“', $name));
             }

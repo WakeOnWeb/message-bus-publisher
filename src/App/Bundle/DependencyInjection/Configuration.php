@@ -133,6 +133,7 @@ final class Configuration implements ConfigurationInterface
                             ->arrayNode('amqp')
                                 ->children()
                                     ->scalarNode('queue')->isRequired()->end()
+                                    ->scalarNode('message_name')->defaultValue('EventBusExternalMessage')->cannotBeEmpty()->end()
                                 ->end()
                             ->end()
                         ->end()
