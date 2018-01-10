@@ -1,5 +1,7 @@
 # WakeOnWeb MessageBusPublisher
 
+**important, we don't ensure BC compatibility in 0.x tags, we'll ensure it from 1.x only**
+
 ## Installation
 
 `composer.json`
