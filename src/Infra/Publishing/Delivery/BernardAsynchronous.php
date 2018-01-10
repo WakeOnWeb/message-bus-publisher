@@ -1,12 +1,12 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Infra\Publishing\Delivery;
+namespace WakeOnWeb\MessageBusPublisher\Infra\Publishing\Delivery;
 
 use Bernard\Message\PlainMessage;
 use Bernard\Producer as BernardProducer;
-use Prooph\Common\Messaging\DomainEvent;
-use WakeOnWeb\EventBusPublisher\Domain\Publishing\Delivery\DeliveryInterface;
-use WakeOnWeb\EventBusPublisher\Infra\Queue\BernardReceiver;
+use Prooph\Common\Messaging\DomainMessage;
+use WakeOnWeb\MessageBusPublisher\Domain\Publishing\Delivery\DeliveryInterface;
+use WakeOnWeb\MessageBusPublisher\Infra\Queue\BernardReceiver;
 
 class BernardAsynchronous implements DeliveryInterface
 {
@@ -29,11 +29,11 @@ class BernardAsynchronous implements DeliveryInterface
     /**
      * {@inheritdoc}
      */
-    public function deliver(DomainEvent $event, string $targetId): void
+    public function deliver(DomainMessage $message, string $targetId): void
     {
         $bernardMessage = new PlainMessage(BernardReceiver::MESSAGE_NAME, [
             'target' => $targetId,
-            'domain_event' => serialize($event),
+            'domain_message' => serialize($message),
         ]);
 
         $this->bernardProducer->produce($bernardMessage, $this->guessQueueName($targetId));

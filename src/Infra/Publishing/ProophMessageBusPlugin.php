@@ -1,25 +1,25 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Infra\Publishing;
+namespace WakeOnWeb\MessageBusPublisher\Infra\Publishing;
 
 use Prooph\Common\Event\DefaultActionEvent;
 use Prooph\ServiceBus\MessageBus;
 use Prooph\ServiceBus\Plugin\AbstractPlugin;
-use WakeOnWeb\EventBusPublisher\Domain\Publishing\Delivery\DeliveryInterface;
-use WakeOnWeb\EventBusPublisher\Domain\Router\EventRouterInterface;
-use WakeOnWeb\EventBusPublisher\Domain\Audit\AuditorInterface;
+use WakeOnWeb\MessageBusPublisher\Domain\Audit\AuditorInterface;
+use WakeOnWeb\MessageBusPublisher\Domain\Publishing\Delivery\DeliveryInterface;
+use WakeOnWeb\MessageBusPublisher\Domain\Router\MessageRouterInterface;
 
 /**
- * ProophEventBusPlugin.
+ * ProophMessageBusPlugin.
  *
  * @uses \AbstractPlugin
  *
  * @author Stephane PY <s.py@wakeonweb.com>
  */
-class ProophEventBusPlugin extends AbstractPlugin
+class ProophMessageBusPlugin extends AbstractPlugin
 {
-    /** var EventRouterInterface */
-    private $eventRouter;
+    /** var MessageRouterInterface */
+    private $messageRouter;
 
     /** var DeliveryInterface */
     private $delivery;
@@ -28,13 +28,13 @@ class ProophEventBusPlugin extends AbstractPlugin
     private $auditor;
 
     /**
-     * @param EventRouterInterface $eventRouter eventRouter
+     * @param MessageRouterInterface $messageRouter messageRouter
      * @param DeliveryInterface    $delivery    delivery
      * @param AuditorInterface     $auditor     auditor
      */
-    public function __construct(EventRouterInterface $eventRouter, DeliveryInterface $delivery, AuditorInterface $auditor = null)
+    public function __construct(MessageRouterInterface $messageRouter, DeliveryInterface $delivery, AuditorInterface $auditor = null)
     {
-        $this->eventRouter = $eventRouter;
+        $this->messageRouter = $messageRouter;
         $this->delivery = $delivery;
         $this->auditor = $auditor;
     }
@@ -50,15 +50,15 @@ class ProophEventBusPlugin extends AbstractPlugin
 
     public function onRouteMessage(DefaultActionEvent $event)
     {
-        $event = $event->getParam(MessageBus::EVENT_PARAM_MESSAGE);
-        $targetIds = $this->eventRouter->route($event);
+        $message = $event->getParam(MessageBus::EVENT_PARAM_MESSAGE);
+        $targetIds = $this->messageRouter->route($message);
 
         if ($this->auditor) {
-            $this->auditor->registerListenedEvent($event, false === empty($targetIds));
+            $this->auditor->registerListenedMessage($message, false === empty($targetIds));
         }
 
         foreach ($targetIds as $targetId) {
-            $this->delivery->deliver($event, $targetId);
+            $this->delivery->deliver($message, $targetId);
         }
     }
 }

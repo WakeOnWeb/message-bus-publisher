@@ -1,12 +1,12 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Infra\Gateway;
+namespace WakeOnWeb\MessageBusPublisher\Infra\Gateway;
 
 use Psr\Container\ContainerInterface;
-use WakeOnWeb\EventBusPublisher\Domain\Gateway\Definition;
-use WakeOnWeb\EventBusPublisher\Domain\Gateway\Definition\GatewayDefinitionInterface;
-use WakeOnWeb\EventBusPublisher\Domain\Gateway\GatewayFactoryInterface;
-use WakeOnWeb\EventBusPublisher\Domain\Gateway\GatewayInterface;
+use WakeOnWeb\MessageBusPublisher\Domain\Gateway\Definition;
+use WakeOnWeb\MessageBusPublisher\Domain\Gateway\Definition\GatewayDefinitionInterface;
+use WakeOnWeb\MessageBusPublisher\Domain\Gateway\GatewayFactoryInterface;
+use WakeOnWeb\MessageBusPublisher\Domain\Gateway\GatewayInterface;
 
 class LazyContainerGatewayFactory implements GatewayFactoryInterface
 {
@@ -40,7 +40,7 @@ class LazyContainerGatewayFactory implements GatewayFactoryInterface
 
     private function createHttpGatewayFromDefinition(Definition\HttpGatewayDefinition $gatewayDefinition): GatewayInterface
     {
-        $gateway = $this->container->get('wow.event_bus_publisher.gateway.http');
+        $gateway = $this->container->get('wow.message_bus_publisher.gateway.http');
         $gateway->configure($gatewayDefinition->getEndpoint());
 
         return $gateway;
@@ -48,7 +48,7 @@ class LazyContainerGatewayFactory implements GatewayFactoryInterface
 
     private function createAmqpGatewayFromDefinition(Definition\AmqpGatewayDefinition $gatewayDefinition): GatewayInterface
     {
-        $gateway = $this->container->get('wow.event_bus_publisher.gateway.amqp');
+        $gateway = $this->container->get('wow.message_bus_publisher.gateway.amqp');
         $gateway->configure($gatewayDefinition->getQueueName(), $gatewayDefinition->getMessageName());
 
         return $gateway;

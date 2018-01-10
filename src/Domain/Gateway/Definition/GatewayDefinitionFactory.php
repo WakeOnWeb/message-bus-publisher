@@ -1,6 +1,6 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Domain\Gateway\Definition;
+namespace WakeOnWeb\MessageBusPublisher\Domain\Gateway\Definition;
 
 abstract class GatewayDefinitionFactory
 {

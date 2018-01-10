@@ -1,9 +1,9 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Infra\Gateway;
+namespace WakeOnWeb\MessageBusPublisher\Infra\Gateway;
 
-use WakeOnWeb\EventBusPublisher\Domain\Gateway\GatewayInterface;
-use WakeOnWeb\EventBusPublisher\Domain\Gateway\GatewayResponse;
+use WakeOnWeb\MessageBusPublisher\Domain\Gateway\GatewayInterface;
+use WakeOnWeb\MessageBusPublisher\Domain\Gateway\GatewayResponse;
 use Bernard\Producer as BernardProducer;
 use Bernard\Message\PlainMessage;
 

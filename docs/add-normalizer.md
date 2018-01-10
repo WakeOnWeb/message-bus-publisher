@@ -4,7 +4,7 @@
 
 ```yaml
 <service class="FQCN\To\Normalizer" public="false">
-    <tag name="wow.event_bus_publisher.normalizer" />
+    <tag name="wow.message_bus_publisher.normalizer" />
 </service>
 ```
 

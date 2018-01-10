@@ -1,6 +1,6 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Domain\Gateway;
+namespace WakeOnWeb\MessageBusPublisher\Domain\Gateway;
 
 /**
  * GatewayInterface.

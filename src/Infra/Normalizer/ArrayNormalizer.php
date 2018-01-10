@@ -1,9 +1,9 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Infra\Normalizer;
+namespace WakeOnWeb\MessageBusPublisher\Infra\Normalizer;
 
-use WakeOnWeb\EventBusPublisher\Domain\Normalizer\NormalizerInterface;
-use Prooph\Common\Messaging\DomainEvent;
+use WakeOnWeb\MessageBusPublisher\Domain\Normalizer\NormalizerInterface;
+use Prooph\Common\Messaging\DomainMessage;
 
 /**
  * ArrayNormalizer.
@@ -18,11 +18,11 @@ class ArrayNormalizer extends AbstractNormalizer implements NormalizerInterface
     /**
      * {@inheritdoc}
      */
-    public function normalize(DomainEvent $event)
+    public function normalize(DomainMessage $message)
     {
-        $event = $this->resetAsyncState($event);
+        $message = $this->resetAsyncState($message);
 
-        return $event->toArray();
+        return $message->toArray();
     }
 
     /**

@@ -1,8 +1,8 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Domain\Publishing\Delivery;
+namespace WakeOnWeb\MessageBusPublisher\Domain\Publishing\Delivery;
 
-use Prooph\Common\Messaging\DomainEvent;
+use Prooph\Common\Messaging\DomainMessage;
 
 /**
  * DeliveryInterface.
@@ -12,10 +12,10 @@ use Prooph\Common\Messaging\DomainEvent;
 interface DeliveryInterface
 {
     /**
-     * Delivery an event to a target.
+     * Delivery an message to a target.
      *
-     * @param DomainEvent $event    event
+     * @param DomainMessage $message    message
      * @param string      $targetId targetId
      */
-    public function deliver(DomainEvent $event, string $targetId): void;
+    public function deliver(DomainMessage $message, string $targetId): void;
 }

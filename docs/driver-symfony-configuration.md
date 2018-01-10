@@ -2,7 +2,7 @@ Driver Symfony Configuration
 ============================
 
 ```
-wakeonweb_event_bus_publisher:
+wakeonweb_message_bus_publisher:
     driver:
         in_memory:
             targets:
@@ -16,7 +16,7 @@ wakeonweb_event_bus_publisher:
                 z:
                     amqp:
                         queue: xxx
-                        message_name: EventBusExternalMessage
+                        message_name: MessageBusExternalMessage
                     normalizer: array
             routing:
                 x:

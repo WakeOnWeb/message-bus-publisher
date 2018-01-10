@@ -1,13 +1,13 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Infra\Publishing\Delivery;
+namespace WakeOnWeb\MessageBusPublisher\Infra\Publishing\Delivery;
 
-use Prooph\Common\Messaging\DomainEvent;
-use WakeOnWeb\EventBusPublisher\Domain\Audit\AuditorInterface;
-use WakeOnWeb\EventBusPublisher\Domain\Gateway\GatewayFactoryInterface;
-use WakeOnWeb\EventBusPublisher\Domain\Normalizer\NormalizerRepositoryInterface;
-use WakeOnWeb\EventBusPublisher\Domain\Publishing\Delivery\DeliveryInterface;
-use WakeOnWeb\EventBusPublisher\Domain\Target\TargetRepositoryInterface;
+use Prooph\Common\Messaging\DomainMessage;
+use WakeOnWeb\MessageBusPublisher\Domain\Audit\AuditorInterface;
+use WakeOnWeb\MessageBusPublisher\Domain\Gateway\GatewayFactoryInterface;
+use WakeOnWeb\MessageBusPublisher\Domain\Normalizer\NormalizerRepositoryInterface;
+use WakeOnWeb\MessageBusPublisher\Domain\Publishing\Delivery\DeliveryInterface;
+use WakeOnWeb\MessageBusPublisher\Domain\Target\TargetRepositoryInterface;
 
 class Synchronous implements DeliveryInterface
 {
@@ -38,12 +38,12 @@ class Synchronous implements DeliveryInterface
     /**
      * {@inheritdoc}
      */
-    public function deliver(DomainEvent $event, string $targetId): void
+    public function deliver(DomainMessage $message, string $targetId): void
     {
         $target = $this->targetRepository->findRequired($targetId);
         $normalizer = $this->normalizerRepository->find($target->getNormalizer());
 
-        $normalizedData = $normalizer ? $normalizer->normalize($event) : $event;
+        $normalizedData = $normalizer ? $normalizer->normalize($message) : $message;
 
         $beginTimer = microtime(true);
         $response = $this->gatewayFactory
@@ -53,7 +53,7 @@ class Synchronous implements DeliveryInterface
         $response = $response->withTime(microtime(true) - $beginTimer);
 
         if ($this->auditor) {
-            $this->auditor->registerTargetedEvent($event, $targetId, $response);
+            $this->auditor->registerTargetedMessage($message, $targetId, $response);
         }
     }
 }

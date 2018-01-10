@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace WakeOnWeb\EventBusPublisher\App\Bundle\DependencyInjection;
+namespace WakeOnWeb\MessageBusPublisher\App\Bundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
-use WakeOnWeb\EventBusPublisher\Infra\Audit\DoctrineORM\Entity as AuditEntity;
-use WakeOnWeb\EventBusPublisher\Infra\Router\DoctrineORM\Entity as RouterEntity;
+use WakeOnWeb\MessageBusPublisher\Infra\Audit\DoctrineORM\Entity as AuditEntity;
+use WakeOnWeb\MessageBusPublisher\Infra\Router\DoctrineORM\Entity as RouterEntity;
 
 final class Configuration implements ConfigurationInterface
 {
@@ -21,7 +21,7 @@ final class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('wakeonweb_event_bus_publisher')
+        $rootNode = $treeBuilder->root('wakeonweb_message_bus_publisher')
             ->children()
                 ->arrayNode('publishing')
                     ->validate()
@@ -55,16 +55,16 @@ final class Configuration implements ConfigurationInterface
                             ->children()
                                 ->arrayNode('monolog')
                                     ->children()
-                                        ->booleanNode('only_routed_events')->defaultFalse()->end()
+                                        ->booleanNode('only_routed_messages')->defaultFalse()->end()
                                         ->scalarNode('level')->defaultValue('notice')->end()
                                     ->end()
                                 ->end()
                                 ->arrayNode('doctrine_orm')
                                     ->children()
-                                        ->booleanNode('only_routed_events')->defaultFalse()->end()
+                                        ->booleanNode('only_routed_messages')->defaultFalse()->end()
                                         ->scalarNode('entity_manager')->defaultValue('default')->cannotBeEmpty()->end()
-                                        ->scalarNode('listened_event_entity')->defaultValue(AuditEntity\ListenedEvent::class)->cannotBeEmpty()->end()
-                                        ->scalarNode('targeted_event_entity')->defaultValue(AuditEntity\TargetedEventWithResponse::class)->cannotBeEmpty()->end()
+                                        ->scalarNode('listened_message_entity')->defaultValue(AuditEntity\ListenedMessage::class)->cannotBeEmpty()->end()
+                                        ->scalarNode('targeted_message_entity')->defaultValue(AuditEntity\TargetedMessageWithResponse::class)->cannotBeEmpty()->end()
                                     ->end()
                                 ->end()
                                 ->arrayNode('services')
@@ -79,7 +79,7 @@ final class Configuration implements ConfigurationInterface
                         ->ifTrue(function ($v) {
                             return 1 !== count(array_keys($v));
                         })
-                        ->thenInvalid('wakeonweb_event_bus_publisher: You must define only one driver.')
+                        ->thenInvalid('wakeonweb_message_bus_publisher: You must define only one driver.')
                     ->end()
                     ->children()
                         ->append($this->createInMemoryDriver())
@@ -133,7 +133,7 @@ final class Configuration implements ConfigurationInterface
                             ->arrayNode('amqp')
                                 ->children()
                                     ->scalarNode('queue')->isRequired()->end()
-                                    ->scalarNode('message_name')->defaultValue('EventBusExternalMessage')->cannotBeEmpty()->end()
+                                    ->scalarNode('message_name')->defaultValue('MessageBusExternalMessage')->cannotBeEmpty()->end()
                                 ->end()
                             ->end()
                         ->end()

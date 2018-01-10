@@ -1,15 +1,15 @@
 # Audit logger
 
 ```
-wakeonweb_event_bus_publisher:
+wakeonweb_message_bus_publisher:
     audit:
         drivers:
             monolog:
                 level: notice
-                only_routed_events: true # do you want to log each events ?
+                only_routed_messages: true # do you want to log each messages ?
 ```
 
-You can easily log events in a dedicated handler:
+You can easily log messages in a dedicated handler:
 
 ```
 monolog:
@@ -18,7 +18,7 @@ monolog:
             type: stream
             path: "%kernel.logs_dir%/audit.%kernel.environment%.log"
             level: debug
-            channels: ["wow.event_bus_publisher.audit"]
+            channels: ["wow.message_bus_publisher.audit"]
 ```
 
 [Back to home](../README.md)

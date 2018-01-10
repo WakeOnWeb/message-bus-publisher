@@ -1,12 +1,12 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Infra\Audit\PsrLogger;
+namespace WakeOnWeb\MessageBusPublisher\Infra\Audit\PsrLogger;
 
-use Prooph\Common\Messaging\DomainEvent;
+use Prooph\Common\Messaging\DomainMessage;
 use Psr\Log\LogLevel;
 use Psr\Log\LoggerInterface;
-use WakeOnWeb\EventBusPublisher\Domain\Audit\AuditorInterface;
-use WakeOnWeb\EventBusPublisher\Domain\Gateway\GatewayResponse;
+use WakeOnWeb\MessageBusPublisher\Domain\Audit\AuditorInterface;
+use WakeOnWeb\MessageBusPublisher\Domain\Gateway\GatewayResponse;
 
 class Auditor implements AuditorInterface
 {
@@ -14,43 +14,43 @@ class Auditor implements AuditorInterface
     private $logger;
 
     /** @var bool */
-    private $onlyRoutedEvents;
+    private $onlyRoutedMessages;
 
     /** @var string */
     private $level;
 
-    public function __construct(LoggerInterface $logger, bool $onlyRoutedEvents = false, string $level = LogLevel::NOTICE)
+    public function __construct(LoggerInterface $logger, bool $onlyRoutedMessages = false, string $level = LogLevel::NOTICE)
     {
         $this->logger = $logger;
-        $this->onlyRoutedEvents = $onlyRoutedEvents;
+        $this->onlyRoutedMessages = $onlyRoutedMessages;
         $this->level = $level;
     }
 
-    public function registerListenedEvent(DomainEvent $event, bool $routed)
+    public function registerListenedMessage(DomainMessage $message, bool $routed)
     {
-        if (false === $routed && true === $this->onlyRoutedEvents) {
+        if (false === $routed && true === $this->onlyRoutedMessages) {
             return;
         }
 
-        $this->logger->log($this->level, '[wakoneweb.event_bus_publisher][listened_event] Event {event_name} #{event_id}, routed: {routed},  with message: {message}', [
-            'event_name' => $event->messageName(),
-            'event_id' => (string) $event->uuid(),
+        $this->logger->log($this->level, '[wakoneweb.message_bus_publisher][listened_message] Message {message_name} #{message_id}, routed: {routed},  with message: {message}', [
+            'message_name' => $message->messageName(),
+            'message_id' => (string) $message->uuid(),
             'routed' => $routed ? 'yes' : 'no',
-            'message' => json_encode($event->toArray()),
+            'message' => json_encode($message->toArray()),
         ]);
     }
 
-    public function registerTargetedEvent(DomainEvent $event, string $targetId, GatewayResponse $gatewayResponse)
+    public function registerTargetedMessage(DomainMessage $message, string $targetId, GatewayResponse $gatewayResponse)
     {
-        $this->logger->log($this->level, '[wakoneweb.event_bus_publisher][targeted_event] Target {target}, Event {event_name} #{event_id} with message: {message}', [
+        $this->logger->log($this->level, '[wakoneweb.message_bus_publisher][targeted_message] Target {target}, Message {message_name} #{message_id} with message: {message}', [
             'target' => $targetId,
-            'event_name' => $event->messageName(),
-            'event_id' => (string) $event->uuid(),
-            'message' => json_encode($event->toArray()),
+            'message_name' => $message->messageName(),
+            'message_id' => (string) $message->uuid(),
+            'message' => json_encode($message->toArray()),
         ]);
 
-        $this->logger->log(LogLevel::DEBUG, '[wakoneweb.event_bus_publisher][targeted_event] Event #{event_id}, Response state: {response_state} in {response_time} second(s) with body: {response_body}', [
-            'event_id' => (string) $event->uuid(),
+        $this->logger->log(LogLevel::DEBUG, '[wakoneweb.message_bus_publisher][targeted_message] Message #{message_id}, Response state: {response_state} in {response_time} second(s) with body: {response_body}', [
+            'message_id' => (string) $message->uuid(),
             'response_state' => $gatewayResponse->isSuccess() ? 'succeed' : 'failed',
             'response_time' => $gatewayResponse->getTime() ?: '#',
             'response_body' => $gatewayResponse->getBody() ?: 'empty body',

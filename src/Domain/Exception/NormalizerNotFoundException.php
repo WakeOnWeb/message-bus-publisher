@@ -1,6 +1,6 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Domain\Exception;
+namespace WakeOnWeb\MessageBusPublisher\Domain\Exception;
 
 /**
  * NormalizerNotFoundException.

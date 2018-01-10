@@ -5,9 +5,9 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="wow.event_bus_publisher.queue.bernard.receiver" class="WakeOnWeb\EventBusPublisher\Infra\Queue\BernardReceiver" public="true">
-            <argument type="service" id="wow.event_bus_publisher.publishing.delivery.synchronous" />
-            <tag name="bernard.receiver" message="DomainEvent" />
+        <service id="wow.message_bus_publisher.queue.bernard.receiver" class="WakeOnWeb\MessageBusPublisher\Infra\Queue\BernardReceiver" public="true">
+            <argument type="service" id="wow.message_bus_publisher.publishing.delivery.synchronous" />
+            <tag name="bernard.receiver" message="DomainMessage" />
         </service>
     </services>
 </container>

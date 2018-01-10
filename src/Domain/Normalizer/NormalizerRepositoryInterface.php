@@ -1,6 +1,6 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Domain\Normalizer;
+namespace WakeOnWeb\MessageBusPublisher\Domain\Normalizer;
 
 /**
  * NormalizerRepositoryInterface.

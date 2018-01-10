@@ -1,49 +1,49 @@
 <?php
 
-namespace WakeOnWeb\EventBusPublisher\Infra\Audit\DoctrineORM;
+namespace WakeOnWeb\MessageBusPublisher\Infra\Audit\DoctrineORM;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Prooph\Common\Messaging\DomainEvent;
-use WakeOnWeb\EventBusPublisher\Domain\Audit\AuditorInterface;
-use WakeOnWeb\EventBusPublisher\Domain\Gateway\GatewayResponse;
-use WakeOnWeb\EventBusPublisher\Infra\Audit\DoctrineORM\Entity\ResponseAwareEventInterface;
+use Prooph\Common\Messaging\DomainMessage;
+use WakeOnWeb\MessageBusPublisher\Domain\Audit\AuditorInterface;
+use WakeOnWeb\MessageBusPublisher\Domain\Gateway\GatewayResponse;
+use WakeOnWeb\MessageBusPublisher\Infra\Audit\DoctrineORM\Entity\ResponseAwareMessageInterface;
 
 class Auditor implements AuditorInterface
 {
     private $entityManager;
-    private $listenedEventClass;
-    private $targetedEventClass;
-    private $onlyRoutedEvents;
+    private $listenedMessageClass;
+    private $targetedMessageClass;
+    private $onlyRoutedMessages;
 
-    public function __construct(EntityManagerInterface $entityManager, string $listenedEventClass, string $targetedEventClass, bool $onlyRoutedEvents = false)
+    public function __construct(EntityManagerInterface $entityManager, string $listenedMessageClass, string $targetedMessageClass, bool $onlyRoutedMessages = false)
     {
         $this->entityManager = $entityManager;
-        $this->listenedEventClass = $listenedEventClass;
-        $this->targetedEventClass = $targetedEventClass;
-        $this->onlyRoutedEvents = $onlyRoutedEvents;
+        $this->listenedMessageClass = $listenedMessageClass;
+        $this->targetedMessageClass = $targetedMessageClass;
+        $this->onlyRoutedMessages = $onlyRoutedMessages;
     }
 
-    public function registerListenedEvent(DomainEvent $event, bool $routed)
+    public function registerListenedMessage(DomainMessage $message, bool $routed)
     {
-        if (false === $routed && true === $this->onlyRoutedEvents) {
+        if (false === $routed && true === $this->onlyRoutedMessages) {
             return;
         }
 
-        $listenedEvent = call_user_func([$this->listenedEventClass, 'createFromDomainEvent'], $event);
+        $listenedMessage = call_user_func([$this->listenedMessageClass, 'createFromDomainMessage'], $message);
 
-        $this->entityManager->persist($listenedEvent);
+        $this->entityManager->persist($listenedMessage);
         $this->entityManager->flush();
     }
 
-    public function registerTargetedEvent(DomainEvent $event, string $targetId, GatewayResponse $gatewayResponse)
+    public function registerTargetedMessage(DomainMessage $message, string $targetId, GatewayResponse $gatewayResponse)
     {
-        $targetedEvent = call_user_func([$this->targetedEventClass, 'createFromDomainEvent'], $event, $targetId);
+        $targetedMessage = call_user_func([$this->targetedMessageClass, 'createFromDomainMessage'], $message, $targetId);
 
-        if ($targetedEvent instanceof ResponseAwareEventInterface) {
-            $targetedEvent->setGatewayResponse($gatewayResponse);
+        if ($targetedMessage instanceof ResponseAwareMessageInterface) {
+            $targetedMessage->setGatewayResponse($gatewayResponse);
         }
 
-        $this->entityManager->persist($targetedEvent);
+        $this->entityManager->persist($targetedMessage);
         $this->entityManager->flush();
     }
 }

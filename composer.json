@@ -1,11 +1,11 @@
 {
-    "name": "wakeonweb/event-bus-publisher",
+    "name": "wakeonweb/message-bus-publisher",
     "type": "library",
-    "description": "WakeOnWeb EventBus publisher",
+    "description": "WakeOnWeb MessageBus publisher",
     "keywords": [
-        "event-bus"
+        "message-bus"
     ],
-    "homepage": "https://bitbucket.org/wakeonweb/event-bus-publisher",
+    "homepage": "https://bitbucket.org/wakeonweb/message-bus-publisher",
     "license": "private",
     "minimum-stability": "dev",
     "require": {
@@ -18,7 +18,7 @@
     },
     "autoload": {
         "psr-4": {
-            "WakeOnWeb\\EventBusPublisher\\": "src"
+            "WakeOnWeb\\MessageBusPublisher\\": "src"
         }
     },
     "autoload-dev":{
