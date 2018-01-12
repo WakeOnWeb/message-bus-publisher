@@ -9,9 +9,13 @@ class HttpGatewayDefinition implements GatewayDefinitionInterface
     /** @var string */
     private $endpoint;
 
-    public function __construct(string $endpoint)
+    /** @var string */
+    private $contentType;
+
+    public function __construct(string $endpoint, string $contentType)
     {
         $this->endpoint = $endpoint;
+        $this->contentType = $contentType;
     }
 
     public function getEndpoint(): string
@@ -19,9 +23,14 @@ class HttpGatewayDefinition implements GatewayDefinitionInterface
         return $this->endpoint;
     }
 
+    public function getContentType(): string
+    {
+        return $this->contentType;
+    }
+
     public static function createFromArray(array $data): HttpGatewayDefinition
     {
-        return new static($data['endpoint']);
+        return new static($data['endpoint'], $data['content_type']);
     }
 
     public function jsonSerialize()
@@ -29,6 +38,7 @@ class HttpGatewayDefinition implements GatewayDefinitionInterface
         return [
             '_type' => static::TYPE,
             'endpoint' => $this->endpoint,
+            'content_type' => $this->contentType,
         ];
     }
 }

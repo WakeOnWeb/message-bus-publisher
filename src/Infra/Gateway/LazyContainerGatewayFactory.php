@@ -41,7 +41,7 @@ class LazyContainerGatewayFactory implements GatewayFactoryInterface
     private function createHttpGatewayFromDefinition(Definition\HttpGatewayDefinition $gatewayDefinition): GatewayInterface
     {
         $gateway = $this->container->get('wow.message_bus_publisher.gateway.http');
-        $gateway->configure($gatewayDefinition->getEndpoint());
+        $gateway->configure($gatewayDefinition->getEndpoint(), $gatewayDefinition->getContentType());
 
         return $gateway;
     }

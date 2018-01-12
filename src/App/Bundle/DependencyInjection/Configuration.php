@@ -128,6 +128,7 @@ final class Configuration implements ConfigurationInterface
                             ->arrayNode('http')
                                 ->children()
                                     ->scalarNode('endpoint')->isRequired()->end()
+                                    ->scalarNode('content_type')->defaultValue('application/json')->cannotBeEmpty()->end()
                                 ->end()
                             ->end()
                             ->arrayNode('amqp')

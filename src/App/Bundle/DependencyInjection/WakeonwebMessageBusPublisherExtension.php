@@ -89,7 +89,7 @@ final class WakeonwebMessageBusPublisherExtension extends Extension
             if (array_key_exists('service', $targetConfig)) {
                 $gatewayDefinition = new Definition(GatewayDefinition\ServiceGatewayDefinition::class, [$targetConfig['service']['id']]);
             } elseif (array_key_exists('http', $targetConfig)) {
-                $gatewayDefinition = new Definition(GatewayDefinition\HttpGatewayDefinition::class, [$targetConfig['http']['endpoint']]);
+                $gatewayDefinition = new Definition(GatewayDefinition\HttpGatewayDefinition::class, [$targetConfig['http']['endpoint'], $targetConfig['http']['content_type']]);
             } elseif (array_key_exists('amqp', $targetConfig)) {
                 $gatewayDefinition = new Definition(GatewayDefinition\AmqpGatewayDefinition::class, [$targetConfig['amqp']['queue'], $targetConfig['amqp']['message_name']]);
             } else {

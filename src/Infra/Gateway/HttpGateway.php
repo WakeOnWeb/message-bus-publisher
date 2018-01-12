@@ -18,9 +18,10 @@ class HttpGateway implements GatewayInterface
         $this->httpClient = $httpClient ?: new HttpClient();
     }
 
-    public function configure(string $endpoint)
+    public function configure(string $endpoint, string $contentType)
     {
         $this->endpoint = $endpoint;
+        $this->contentType = $contentType;
     }
 
     public function send($message): GatewayResponse
@@ -41,6 +42,11 @@ class HttpGateway implements GatewayInterface
      */
     protected function buildRequestFromMessage($message): Request
     {
-        return new Request('POST', $this->endpoint);
+        return new Request(
+            'POST',
+            $this->endpoint,
+            ['content-type' => $this->contentType],
+            $message
+        );
     }
 }
