@@ -14,6 +14,7 @@
     },
     "suggest": {
         "bernard/bernard": "Publish asynchronously &| publish in amqp queue.",
+        "bernard/bernard-bundle": "Bundle to integrate bernard/bernard in Symfony project",
         "guzzlehttp/guzzle": "Communicate threw HTTP gateway."
     },
     "autoload": {
