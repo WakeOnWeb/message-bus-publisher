@@ -10,7 +10,11 @@ class DefaultMessageIdentifierResolver implements MessageIdentifierResolverInter
     public function resolve($message): string
     {
         if (is_object($message)) {
-            //@todo implement an interface could return an message id.
+
+            if (method_exists($message, 'messageName')) {
+                return $message->messageName();
+            }
+
             return get_class($message);
         }
 
