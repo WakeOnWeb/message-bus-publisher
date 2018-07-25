@@ -43,7 +43,7 @@ class MessageRouter implements MessageRouterInterface
      */
     public function route($message): array
     {
-        $messageId = $this->messageIdentifierResolver->resolve($message);
+        $messageId = get_class($message);
 
         if (false === array_key_exists($messageId, $this->routes)) {
             return [];
